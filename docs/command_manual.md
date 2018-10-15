@@ -25,10 +25,10 @@ If you are logged in and wish to logout you can simply type:
 And you will no longer be the active user.
 <hr>
 
-## Supervisor commands <a name =#SUPERVISOR/>
+## Supervisor commands <a name ="SUPERVISOR"/>
 
-## Administrator commands <a name =#ADMIN/>
+## Administrator commands <a name ="ADMIN"/>
 
-## Instructor commands <a name =#INSTRUCTOR/>
+## Instructor commands <a name ="INSTRUCTOR"/>
 
-## TA commands <a name =#TA/>
+## TA commands <a name ="TA"/>
