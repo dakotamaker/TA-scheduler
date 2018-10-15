@@ -8,7 +8,7 @@ commands with this application for each role with a description of the use case 
 - [Instructor-specific commands](#INSTRUCTOR)
 - [TA-specific commands](#TA)
 
-## Universal commands <a name =#UNIVERSAL/>
+## Universal commands <a name ="UNIVERSAL"/>
 ### Login
 To login to the command line you will have to be registered already by an administrator or supervisor. You will type:
 
