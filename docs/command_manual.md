@@ -1,4 +1,4 @@
-#Command Manual
+# Command Manual
 Here you will find a helpful guide to the current CLI (command line interface) 
 commands with this application for each role with a description of the use case for that command.
 
