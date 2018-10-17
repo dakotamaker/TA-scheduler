@@ -1,0 +1,27 @@
+[accounts]
+*act_email {label: "varchar, not null"}
+act_fname {label: "varchar, not null"}
+act_lname {label: "varchar, not null"}
+act_password {label: "varchar"}
+act_phone {label: "varchar, not null"}
++role_id {label: "role_id, not null"}
+
+[courses]
+*course_id {label: "int, not null"}
+course_name {label: "varchar, not null"}
++instructor_id {label: "act_email"}
+
+[labs]
+*lab_id {label: "int, not null"}
+lab_name {label: "varchar, not null"}
++course_id {label: "course_id, not null"}
++ta_id {label: "act_email"}
+
+[roles]
+*role_id {label: "int, not null"}
+role_name {label: "varchar, not null"}
+
+accounts *--1 roles {label: "are assigned a role"}
+courses 1--? accounts {label: "have an instructor"}
+labs *--1 courses {label: "are assigned to a course"}
+labs 1--? accounts {label: "have a TA"}
