@@ -1,0 +1,26 @@
+graph {
+	graph [dpi=150];
+	node [label="\N",
+		shape=plaintext
+	];
+	edge [color=gray50,
+		minlen=2,
+		style=dashed
+	];
+	accounts	 [label=<<FONT FACE="Helvetica"><TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0"><TR><TD><B><FONT POINT-SIZE="16">accounts</FONT></B></TD></TR><TR><TD ALIGN="LEFT"><U><FONT>act_email</FONT></U><FONT> [varchar, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>act_fname</FONT><FONT> [varchar, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>act_lname</FONT><FONT> [varchar, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>act_password</FONT><FONT> [varchar]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>act_phone</FONT><FONT> [varchar, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><I><FONT>role_id</FONT></I><FONT> [role_id, not null]</FONT></TD></TR></TABLE></FONT>>];
+	roles	 [label=<<FONT FACE="Helvetica"><TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0"><TR><TD><B><FONT POINT-SIZE="16">roles</FONT></B></TD></TR><TR><TD ALIGN="LEFT"><U><FONT>role_id</FONT></U><FONT> [int, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>role_name</FONT><FONT> [varchar, not null]</FONT></TD></TR></TABLE></FONT>>];
+	accounts -- roles	 [headlabel=<<FONT>1</FONT>>,
+		label=<<FONT> are assigned a role </FONT>>,
+		taillabel=<<FONT>0..N</FONT>>];
+	courses	 [label=<<FONT FACE="Helvetica"><TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0"><TR><TD><B><FONT POINT-SIZE="16">courses</FONT></B></TD></TR><TR><TD ALIGN="LEFT"><U><FONT>course_id</FONT></U><FONT> [int, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>course_name</FONT><FONT> [varchar, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><I><FONT>instructor_email</FONT></I><FONT> [act_email]</FONT></TD></TR></TABLE></FONT>>];
+	courses -- accounts	 [headlabel=<<FONT>{0,1}</FONT>>,
+		label=<<FONT> have an instructor </FONT>>,
+		taillabel=<<FONT>1</FONT>>];
+	labs	 [label=<<FONT FACE="Helvetica"><TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0"><TR><TD><B><FONT POINT-SIZE="16">labs</FONT></B></TD></TR><TR><TD ALIGN="LEFT"><U><FONT>lab_id</FONT></U><FONT> [int, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT>lab_name</FONT><FONT> [varchar, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><I><FONT>course_id</FONT></I><FONT> [course_id, not null]</FONT></TD></TR><TR><TD ALIGN="LEFT"><I><FONT>ta_email</FONT></I><FONT> [act_email]</FONT></TD></TR></TABLE></FONT>>];
+	labs -- accounts	 [headlabel=<<FONT>{0,1}</FONT>>,
+		label=<<FONT> have a TA </FONT>>,
+		taillabel=<<FONT>1</FONT>>];
+	labs -- courses	 [headlabel=<<FONT>1</FONT>>,
+		label=<<FONT> are assigned to a course </FONT>>,
+		taillabel=<<FONT>0..N</FONT>>];
+}

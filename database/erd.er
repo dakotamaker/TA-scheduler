@@ -9,13 +9,13 @@ act_phone {label: "varchar, not null"}
 [courses]
 *course_id {label: "int, not null"}
 course_name {label: "varchar, not null"}
-+instructor_id {label: "act_email"}
++instructor_email {label: "act_email"}
 
 [labs]
 *lab_id {label: "int, not null"}
 lab_name {label: "varchar, not null"}
 +course_id {label: "course_id, not null"}
-+ta_id {label: "act_email"}
++ta_email {label: "act_email"}
 
 [roles]
 *role_id {label: "int, not null"}
