@@ -21,6 +21,11 @@ class Account():
         self.act_phone = act['act_phone']
         self.role_id = act['role_id']
 
+    def Update(self):
+        values = [self.act_fname, self.act_lname, self.act_password, self.act_phone, self.role_id]
+        db.cur.execute("update accounts set act_fname = ?, act_lname = ?, act_password = ?, act_phone = ?, role_id = ? where act_email = '%s'" % self.act_email, values)
+        db.SaveCSVTable('accounts')
+
     def __str__(self):
         return (self.act_email + ' - ' + 
                 self.act_fname + ' - ' + 
@@ -40,4 +45,7 @@ if __name__ == '__main__':
     act = Account(db)
     act.act_email = 'email@gmail.com'
     act.GetDetail()
-    print(act)
+    act.act_fname = 'asdfasdasdads'
+    act.Update()
+
+    db.SaveCSVTable('accounts')

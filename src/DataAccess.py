@@ -24,3 +24,17 @@ class DataAccess():
 
         self.cur.executemany('insert into accounts (%s) values (%s);' % (colNames, params), values)
         self.conn.commit()
+
+    def SaveCSVTable(self, tableName):
+        if len(tableName) <= 0:
+            raise ValueError
+
+        self.cur.execute('pragma table_info(%s)' % tableName)
+        colNames = [row['name'] for row in self.cur.fetchall()]
+
+        self.cur.execute('select * from %s' % tableName)
+        rowValues = [dict(row).values() for row in self.cur.fetchall()]
+        with open('../database/%s-update.csv' % tableName, 'w', newline='\n') as f:
+            writer = csv.writer(f)
+            writer.writerow(colNames)
+            writer.writerows(rowValues)
