@@ -34,7 +34,7 @@ class DataAccess():
 
         self.cur.execute('select * from %s' % tableName)
         rowValues = [dict(row).values() for row in self.cur.fetchall()]
-        with open('../database/%s-update.csv' % tableName, 'w', newline='\n') as f:
+        with open('../database/%s.csv' % tableName, 'w', newline='\n') as f:
             writer = csv.writer(f)
             writer.writerow(colNames)
             writer.writerows(rowValues)
