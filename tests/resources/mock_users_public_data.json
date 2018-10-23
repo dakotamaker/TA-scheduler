@@ -1,0 +1,38 @@
+[
+  {
+    "firstName": "ta",
+    "lastName": "one",
+    "email": "ta@one.com",
+    "role": "ta"
+  }, {
+    "firstName": "ta",
+    "lastName": "two",
+    "email": "ta@two.com",
+    "role": "ta"
+  }, {
+    "firstName": "supervisor",
+    "lastName": "one",
+    "email": "supervisor@one.com",
+    "role": "supervisor"
+  }, {
+    "firstName": "admin",
+    "lastName": "one",
+    "email": "admin@one.com",
+    "role": "admin"
+  }, {
+    "firstName": "instructor",
+    "lastName": "one",
+    "email": "instructor@one.com",
+    "role": "instructor"
+  }, {
+    "firstName": "instructor",
+    "lastName": "two",
+    "email": "instructor@two.com",
+    "role": "instructor"
+  }, {
+    "firstName": "new",
+    "lastName": "user",
+    "email": "new@user.com",
+    "role": "instructor"
+  }
+]
