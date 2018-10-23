@@ -92,4 +92,3 @@ class LabsAndCoursesTest(unittest.TestCase):
     def test_assigning_a_lab_to_an_instructor_then_error_is_displayed(self):
         msg = Project.command('assign lab \"course with ta\" \"lab1\" instructor@one.com')
         self.assertEquals(msg, 'Only TAs can be assigned to labs')
-
