@@ -22,7 +22,7 @@ class DataAccess():
             values = [tuple(row) for row in reader]
             params = ('?,' + '?,'.join(' ' * len(cols))).rstrip(', ')
 
-        self.cur.executemany('insert into accounts (%s) values (%s);' % (colNames, params), values)
+        self.cur.executemany('insert into %s (%s) values (%s);' % (tableName, colNames, params), values)
         self.conn.commit()
 
     def SaveCSVTable(self, tableName):
