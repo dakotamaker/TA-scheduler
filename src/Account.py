@@ -32,6 +32,7 @@ class Account():
         self.role_id = act['role_id']
 
     def Add(self):
+        # must validate email and phone
         values = [self.act_email, self.act_fname, self.act_lname, self.act_password,
                   self.act_phone, self.role_id]
         db.cur.execute('''
@@ -52,6 +53,10 @@ class Account():
             role_id = ?
             where act_email like ?
             ''', values)
+        db.SaveCSVTable('accounts')
+    
+    def Delete(self):
+        db.cur.execute('delete from accounts where act_email like ?', [self.act_email])
         db.SaveCSVTable('accounts')
 
     def __str__(self):

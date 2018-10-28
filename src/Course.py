@@ -6,8 +6,10 @@ class Course():
     @staticmethod
     def LoadEntity(db):
         db.LoadCSVTable('courses', [('course_id', 'integer primary key'),
-                                    ('course_name', 'varchar(50) not null'),
+                                    ('course_name', 'varchar(50) unique not null'),
                                     ('instructor_email', 'varchar(50)')])
+        db.LoadCSVTable('course_ta_xref', [('course_id', 'integer'),
+                                        ('ta_email', 'varchar(50)')])
 
     def __init__(self, db):
         self.db = db
@@ -23,11 +25,13 @@ class Course():
         self.instructor_email = c['instructor_email']
 
     def Add(self):
+        # needs to validate course name
         values = [self.course_name, self.instructor_email]
         db.cur.execute('''
             insert into courses (course_name, instructor_email)
             values (?, ?)
         ''', values)
+        self.course_id = db.cur.lastrowid
         db.SaveCSVTable('courses')
 
     def Update(self):
@@ -39,6 +43,23 @@ class Course():
             where course_id = ?
             ''', values)
         db.SaveCSVTable('courses')
+
+    def Delete(self):
+        db.cur.execute('delete from courses where course_id = ?', [
+                       self.course_id])
+        db.SaveCSVTable('courses')
+
+    def AssignTA(self, ta_email):
+        # needs validation to make sure ta_email exists and is a TA and that the TA isn't already assigned to this course
+        db.cur.execute('insert into course_ta_xref (course_id, ta_email) values (?, ?)', [
+                       self.course_id, ta_email])
+        db.SaveCSVTable('course_ta_xref')
+
+    def UnassignTA(self, ta_email):
+        # this should fail if the TA is still assigned to labs
+        db.cur.execute('delete from course_ta_xref where course_id = ? and ta_email = ?', [
+                       self.course_id, ta_email])
+        db.SaveCSVTable('course_ta_xref')
 
     def __str__(self):
         return (str(self.course_id) + ' - ' +
@@ -59,3 +80,7 @@ if __name__ == '__main__':
     c.course_name = 'My course asdfg'
     c.instructor_email = 'instruct@school.edu'
     c.Add()
+    c = Course(db)
+    c.course_id = 1
+    c.GetDetail()
+    c.AssignTA('myta@ta.com')
