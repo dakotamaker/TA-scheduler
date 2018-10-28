@@ -4,6 +4,7 @@ act_fname {label: "varchar, not null"}
 act_lname {label: "varchar, not null"}
 act_password {label: "varchar"}
 act_phone {label: "varchar, not null"}
+role_id {label: "integer, not null"}
 
 [courses]
 *course_id {label: "int, not null"}
