@@ -1,0 +1,66 @@
+[
+  {
+    "firstName": "ta",
+    "lastName": "one",
+    "email": "ta@one.com",
+    "password": "test",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "ta"
+  }, {
+    "firstName": "ta",
+    "lastName": "two",
+    "email": "ta@two.com",
+    "password": "test",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "ta"
+  }, {
+    "firstName": "supervisor",
+    "lastName": "one",
+    "email": "supervisor@one.com",
+    "password": "test",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "supervisor"
+  }, {
+    "firstName": "admin",
+    "lastName": "one",
+    "email": "admin@one.com",
+    "password": "test",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "admin"
+  }, {
+    "firstName": "instructor",
+    "lastName": "one",
+    "email": "instructor@one.com",
+    "password": "test",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "instructor"
+  }, {
+    "firstName": "instructor",
+    "lastName": "two",
+    "email": "instructor@two.com",
+    "password": "test",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "instructor"
+  }, {
+    "firstName": "new",
+    "lastName": "user",
+    "email": "new@user.com",
+    "password": "",
+    "currentUser": false,
+    "phoneNumber": "1112223333",
+    "address": "42 Wallaby Way, Sydney",
+    "role": "instructor"
+  }
+]
