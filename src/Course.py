@@ -5,11 +5,15 @@ class Course():
 
     @staticmethod
     def LoadEntity(db):
-        db.LoadCSVTable('courses', [('course_id', 'integer primary key'),
-                                    ('course_name', 'varchar(50) unique not null'),
-                                    ('instructor_email', 'varchar(50)')])
-        db.LoadCSVTable('course_ta_xref', [('course_id', 'integer not null'),
-                                        ('ta_email', 'varchar(50) not null')])
+        db.LoadCSVTable('courses', [
+            ('course_id', 'integer primary key'),
+            ('course_name', 'varchar(50) unique not null'),
+            ('instructor_email', 'varchar(50)')
+        ])
+        db.LoadCSVTable('course_ta_xref', [
+            ('course_id', 'integer not null'),
+            ('ta_email', 'varchar(50) not null')
+        ])
 
     def __init__(self, db):
         self.db = db

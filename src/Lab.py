@@ -5,10 +5,12 @@ class Lab():
 
     @staticmethod
     def LoadEntity(db):
-        db.LoadCSVTable('labs', [('lab_id', 'integer primary key'),
-                                 ('lab_name', 'varchar(50) not null'),
-                                 ('course_id', 'varchar(50) not null'),
-                                 ('ta_email', 'varchar(50)')])
+        db.LoadCSVTable('labs', [
+            ('lab_id', 'integer primary key'),
+            ('lab_name', 'varchar(50) not null'),
+            ('course_id', 'varchar(50) not null'),
+            ('ta_email', 'varchar(50)')
+        ])
 
     def __init__(self, db):
         self.db = db

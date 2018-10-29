@@ -5,12 +5,14 @@ class Account():
 
     @staticmethod
     def LoadEntity(db):
-        db.LoadCSVTable('accounts', [('act_email', 'varchar(50) primary key'),
-                                     ('act_fname', 'varchar(50) not null'),
-                                     ('act_lname', 'varchar(50) not null'),
-                                     ('act_password', 'varchar(20)'),
-                                     ('act_phone', 'varchar(12) unique not null'),
-                                     ('role_id', 'integer not null')])
+        db.LoadCSVTable('accounts', [
+            ('act_email', 'varchar(50) primary key'),
+            ('act_fname', 'varchar(50) not null'),
+            ('act_lname', 'varchar(50) not null'),
+            ('act_password', 'varchar(20)'),
+            ('act_phone', 'varchar(12) unique not null'),
+            ('role_id', 'integer not null')
+        ])
 
     def __init__(self, db):
         self.db = db
@@ -54,9 +56,10 @@ class Account():
             where act_email like ?
             ''', values)
         db.SaveCSVTable('accounts')
-    
+
     def Delete(self):
-        db.cur.execute('delete from accounts where act_email like ?', [self.act_email])
+        db.cur.execute('delete from accounts where act_email like ?', [
+                       self.act_email])
         db.SaveCSVTable('accounts')
 
     def __str__(self):
