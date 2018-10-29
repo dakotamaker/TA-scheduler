@@ -1,4 +1,4 @@
 class Project:
-   @staticmethod
-   def command(userString):
-      return ""
+    @staticmethod
+    def command(userString):
+        return ""

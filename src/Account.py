@@ -54,12 +54,12 @@ class Account():
             act_phone = ?,
             role_id = ?
             where act_email like ?
-            ''', values)
+        ''', values)
         self.db.SaveCSVTable('accounts')
 
     def Delete(self):
         self.db.cur.execute('delete from accounts where act_email like ?', [
-                       self.act_email])
+            self.act_email])
         self.db.SaveCSVTable('accounts')
 
     def __str__(self):

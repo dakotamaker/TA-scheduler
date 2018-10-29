@@ -45,12 +45,12 @@ class Course():
             course_name = ?,
             instructor_email = ?
             where course_id = ?
-            ''', values)
+        ''', values)
         self.db.SaveCSVTable('courses')
 
     def Delete(self):
         self.db.cur.execute('delete from courses where course_id = ?', [
-                       self.course_id])
+            self.course_id])
         self.db.SaveCSVTable('courses')
 
     def CanAdd(self):
@@ -64,19 +64,20 @@ class Course():
     def AssignTA(self, ta_email):
         # needs validation to make sure ta_email exists and is a TA and that the TA isn't already assigned to this course
         self.db.cur.execute('insert into course_ta_xref (course_id, ta_email) values (?, ?)', [
-                       self.course_id, ta_email])
+            self.course_id, ta_email])
         self.db.SaveCSVTable('course_ta_xref')
 
     def UnassignTA(self, ta_email):
         # this should fail if the TA is still assigned to labs
         self.db.cur.execute('delete from course_ta_xref where course_id = ? and ta_email = ?', [
-                       self.course_id, ta_email])
+            self.course_id, ta_email])
         self.db.SaveCSVTable('course_ta_xref')
 
     def __str__(self):
         return (str(self.course_id) + ' - ' +
                 self.course_name + ' - ' +
                 self.instructor_email)
+
 
 if __name__ == '__main__':
     db = DataAccess()

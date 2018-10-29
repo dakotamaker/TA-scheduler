@@ -45,7 +45,7 @@ class Lab():
             course_id = ?,
             ta_email = ?
             where lab_id = ?
-            ''', values)
+        ''', values)
         self.db.SaveCSVTable('labs')
 
     def Delete(self):

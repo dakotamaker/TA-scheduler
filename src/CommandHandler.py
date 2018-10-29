@@ -45,7 +45,7 @@ class CommandHandler:
             handler(cmd)
         except Exception as e:
             print('Handler error - ', e)
-        
+
     def ExitHandler(self, cmd):
         print('Exiting...')
         exit()
