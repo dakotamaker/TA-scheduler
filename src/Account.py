@@ -24,9 +24,9 @@ class Account():
         self.role_id = -1
 
     def GetDetail(self):
-        db.cur.execute(
+        self.db.cur.execute(
             'select * from accounts where act_email like ?', [self.act_email])
-        act = db.cur.fetchone()
+        act = self.db.cur.fetchone()
         self.act_fname = act['act_fname']
         self.act_lname = act['act_lname']
         self.act_password = act['act_password']
@@ -37,16 +37,16 @@ class Account():
         # must validate email and phone
         values = [self.act_email, self.act_fname, self.act_lname, self.act_password,
                   self.act_phone, self.role_id]
-        db.cur.execute('''
+        self.db.cur.execute('''
             insert into accounts (act_email, act_fname, act_lname, act_password, act_phone, role_id)
             values (?, ?, ?, ?, ?, ?)
         ''', values)
-        db.SaveCSVTable('accounts')
+        self.db.SaveCSVTable('accounts')
 
     def Update(self):
         values = [self.act_fname, self.act_lname, self.act_password,
                   self.act_phone, self.role_id, self.act_email]
-        db.cur.execute('''
+        self.db.cur.execute('''
             update accounts set
             act_fname = ?,
             act_lname = ?,
@@ -55,12 +55,12 @@ class Account():
             role_id = ?
             where act_email like ?
             ''', values)
-        db.SaveCSVTable('accounts')
+        self.db.SaveCSVTable('accounts')
 
     def Delete(self):
-        db.cur.execute('delete from accounts where act_email like ?', [
+        self.db.cur.execute('delete from accounts where act_email like ?', [
                        self.act_email])
-        db.SaveCSVTable('accounts')
+        self.db.SaveCSVTable('accounts')
 
     def __str__(self):
         return (self.act_email + ' - ' +

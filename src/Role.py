@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Role(Enum):
+class Role(IntEnum):
     TA = 1
     Instructor = 2
     Administrator = 3

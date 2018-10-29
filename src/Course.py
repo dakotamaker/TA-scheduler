@@ -22,54 +22,61 @@ class Course():
         self.instructor_email = ''
 
     def GetDetail(self):
-        db.cur.execute(
+        self.db.cur.execute(
             'select * from courses where course_id like ?', [self.course_id])
-        c = db.cur.fetchone()
+        c = self.db.cur.fetchone()
         self.course_name = c['course_name']
         self.instructor_email = c['instructor_email']
 
     def Add(self):
         # needs to validate course name
         values = [self.course_name, self.instructor_email]
-        db.cur.execute('''
+        self.db.cur.execute('''
             insert into courses (course_name, instructor_email)
             values (?, ?)
         ''', values)
-        self.course_id = db.cur.lastrowid
-        db.SaveCSVTable('courses')
+        self.course_id = self.db.cur.lastrowid
+        self.db.SaveCSVTable('courses')
 
     def Update(self):
         values = [self.course_name, self.instructor_email, self.course_id]
-        db.cur.execute('''
+        self.db.cur.execute('''
             update courses set
             course_name = ?,
             instructor_email = ?
             where course_id = ?
             ''', values)
-        db.SaveCSVTable('courses')
+        self.db.SaveCSVTable('courses')
 
     def Delete(self):
-        db.cur.execute('delete from courses where course_id = ?', [
+        self.db.cur.execute('delete from courses where course_id = ?', [
                        self.course_id])
-        db.SaveCSVTable('courses')
+        self.db.SaveCSVTable('courses')
+
+    def CanAdd(self):
+        self.db.cur.execute('''
+            select 1
+            from courses
+            where course_name like ?
+        ''', [self.course_name])
+        return self.db.cur.fetchone() is None
 
     def AssignTA(self, ta_email):
         # needs validation to make sure ta_email exists and is a TA and that the TA isn't already assigned to this course
-        db.cur.execute('insert into course_ta_xref (course_id, ta_email) values (?, ?)', [
+        self.db.cur.execute('insert into course_ta_xref (course_id, ta_email) values (?, ?)', [
                        self.course_id, ta_email])
-        db.SaveCSVTable('course_ta_xref')
+        self.db.SaveCSVTable('course_ta_xref')
 
     def UnassignTA(self, ta_email):
         # this should fail if the TA is still assigned to labs
-        db.cur.execute('delete from course_ta_xref where course_id = ? and ta_email = ?', [
+        self.db.cur.execute('delete from course_ta_xref where course_id = ? and ta_email = ?', [
                        self.course_id, ta_email])
-        db.SaveCSVTable('course_ta_xref')
+        self.db.SaveCSVTable('course_ta_xref')
 
     def __str__(self):
         return (str(self.course_id) + ' - ' +
                 self.course_name + ' - ' +
                 self.instructor_email)
-
 
 if __name__ == '__main__':
     db = DataAccess()

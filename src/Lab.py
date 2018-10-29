@@ -20,9 +20,9 @@ class Lab():
         self.ta_email = ''
 
     def GetDetail(self):
-        db.cur.execute(
+        self.db.cur.execute(
             'select * from labs where lab_id like ?', [self.lab_id])
-        l = db.cur.fetchone()
+        l = self.db.cur.fetchone()
         self.lab_name = l['lab_name']
         self.course_id = l['course_id']
         self.ta_email = l['ta_email']
@@ -30,27 +30,27 @@ class Lab():
     def Add(self):
         # needs validation to make sure course and TA exist (and that the TA is in fact a TA)
         values = [self.lab_name, self.course_id, self.ta_email]
-        db.cur.execute('''
+        self.db.cur.execute('''
             insert into labs (lab_name, course_id, ta_email)
             values (?, ?, ?)
         ''', values)
-        self.lab_id = db.cur.lastrowid
-        db.SaveCSVTable('labs')
+        self.lab_id = self.db.cur.lastrowid
+        self.db.SaveCSVTable('labs')
 
     def Update(self):
         values = [self.lab_name, self.course_id, self.ta_email, self.lab_id]
-        db.cur.execute('''
+        self.db.cur.execute('''
             update labs set
             lab_name = ?,
             course_id = ?,
             ta_email = ?
             where lab_id = ?
             ''', values)
-        db.SaveCSVTable('labs')
+        self.db.SaveCSVTable('labs')
 
     def Delete(self):
-        db.cur.execute('delete from labs where lab_id = ?', [self.lab_id])
-        db.SaveCSVTable('labs')
+        self.db.cur.execute('delete from labs where lab_id = ?', [self.lab_id])
+        self.db.SaveCSVTable('labs')
 
     def __str__(self):
         return (str(self.lab_id) + ' - ' +
