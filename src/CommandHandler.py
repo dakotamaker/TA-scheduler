@@ -1,4 +1,4 @@
-from DataAccess import DataAccess
+from AbstractDataAccess import AbstractDataAccess
 from Account import Account
 from Course import Course
 from Lab import Lab
@@ -8,13 +8,9 @@ import shlex
 
 class CommandHandler:
 
-    def __init__(self):
-        db = DataAccess()
+    def __init__(self, db: AbstractDataAccess):
         self.db = db
         self.currentUser = None
-        Account.LoadEntity(db)
-        Course.LoadEntity(db)
-        Lab.LoadEntity(db)
 
     def ProcessCommand(self, cmdString):
         cmd = shlex.split(cmdString)  # don't split quoted substrings

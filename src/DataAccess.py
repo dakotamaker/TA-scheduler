@@ -1,16 +1,9 @@
 import csv
 import sqlite3
+from AbstractDataAccess import AbstractDataAccess
 
 
-class DataAccess():
-
-    def __init__(self):
-        self.conn = sqlite3.connect(':memory:')
-        self.conn.row_factory = sqlite3.Row
-        self.cur = self.conn.cursor()
-
-    def __del__(self):
-        self.conn.close()
+class DataAccess(AbstractDataAccess):
 
     def LoadCSVTable(self, tableName, cols):
         if len(tableName) <= 0 or len(cols) <= 0:
