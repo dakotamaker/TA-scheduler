@@ -5,7 +5,8 @@ from AbstractDataAccess import AbstractDataAccess
 
 class DataAccess(AbstractDataAccess):
 
-    def LoadCSVTable(self, tableName, cols):
+    # Loads <tableName>.csv into the in memory database with column names <cols>
+    def LoadCSVTable(self, tableName: str, cols: [str]):
         if len(tableName) <= 0 or len(cols) <= 0:
             raise ValueError
 
@@ -20,8 +21,9 @@ class DataAccess(AbstractDataAccess):
         self.cur.executemany('insert into %s (%s) values (%s);' %
                              (tableName, colNames, params), values)
         self.conn.commit()
-
-    def SaveCSVTable(self, tableName):
+    
+    # Writes the in memory table <tableName> to <tableName>.csv
+    def SaveCSVTable(self, tableName: str):
         if len(tableName) <= 0:
             raise ValueError
 

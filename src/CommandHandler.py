@@ -12,7 +12,7 @@ class CommandHandler:
         self.db = db
         self.currentUser = None
 
-    def ProcessCommand(self, cmdString):
+    def ProcessCommand(self, cmdString: str):
         cmd = shlex.split(cmdString)  # don't split quoted substrings
         handler = {
             'exit': self.ExitHandler,
@@ -42,11 +42,11 @@ class CommandHandler:
         except Exception as e:
             print('Handler error - ', e)
 
-    def ExitHandler(self, cmd):
+    def ExitHandler(self, cmd: [str]):
         print('Exiting...')
         exit()
 
-    def LoginHandler(self, cmd):
+    def LoginHandler(self, cmd: [str]):
         a = Account(self.db)
         a.act_email = cmd[0]
         a.GetDetail()
@@ -56,18 +56,18 @@ class CommandHandler:
         else:
             print('Invalid credentials')
 
-    def LogoutHandler(self, cmd):
+    def LogoutHandler(self, cmd: [str]):
         self.currentUser = None
         print('Logged out')
 
-    def NotifyHandler(self, cmd):
+    def NotifyHandler(self, cmd: [str]):
         print('Nofity:', cmd)
 
-    def CreateUserHandler(self, cmd):
+    def CreateUserHandler(self, cmd: [str]):
         print('Create user:', cmd)
 
-    def CreateCourseHandler(self, cmd):
-        if self.currentUser is None or Role(self.currentUser.role_id) < Role.Administrator:
+    def CreateCourseHandler(self, cmd: [str]):
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
             print('Must be logged in as an Administrator or Supervisor')
             return
 
@@ -79,20 +79,20 @@ class CommandHandler:
         c.Add()
         print('Course added')
 
-    def CreateLabHandler(self, cmd):
+    def CreateLabHandler(self, cmd: [str]):
         print('Create lab:', cmd)
 
-    def AssignCourseHandler(self, cmd):
+    def AssignCourseHandler(self, cmd: [str]):
         print('Assign course:', cmd)
 
-    def AssignLabHandler(self, cmd):
+    def AssignLabHandler(self, cmd: [str]):
         print('Assign lab:', cmd)
 
-    def DeleteUserHandler(self, cmd):
+    def DeleteUserHandler(self, cmd: [str]):
         print('Delete user:', cmd)
 
-    def DeleteCourseHandler(self, cmd):
+    def DeleteCourseHandler(self, cmd: [str]):
         print('Delete course:', cmd)
 
-    def DeleteLabHandler(self, cmd):
+    def DeleteLabHandler(self, cmd: [str]):
         print('Delete lab:', cmd)

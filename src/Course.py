@@ -1,10 +1,10 @@
-from DataAccess import DataAccess
+from AbstractDataAccess import AbstractDataAccess
 
 
 class Course():
 
     @staticmethod
-    def LoadEntity(db):
+    def LoadEntity(db: AbstractDataAccess):
         db.LoadCSVTable('courses', [
             ('course_id', 'integer primary key'),
             ('course_name', 'varchar(50) unique not null'),
@@ -15,7 +15,7 @@ class Course():
             ('ta_email', 'varchar(50) not null')
         ])
 
-    def __init__(self, db):
+    def __init__(self, db: AbstractDataAccess):
         self.db = db
         self.course_id = -1
         self.course_name = ''
@@ -53,7 +53,7 @@ class Course():
             self.course_id])
         self.db.SaveCSVTable('courses')
 
-    def CanAdd(self):
+    def CanAdd(self) -> bool:
         self.db.cur.execute('''
             select 1
             from courses
@@ -73,26 +73,7 @@ class Course():
             self.course_id, ta_email])
         self.db.SaveCSVTable('course_ta_xref')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (str(self.course_id) + ' - ' +
                 self.course_name + ' - ' +
                 self.instructor_email)
-
-
-if __name__ == '__main__':
-    db = DataAccess()
-    Course.LoadEntity(db)
-    c = Course(db)
-    c.course_id = 1
-    c.GetDetail()
-    print(c)
-    c.course_name = 'Data Structures'
-    c.Update()
-    c = Course(db)
-    c.course_name = 'My course asdfg'
-    c.instructor_email = 'instruct@school.edu'
-    c.Add()
-    c = Course(db)
-    c.course_id = 1
-    c.GetDetail()
-    c.AssignTA('myta@ta.com')

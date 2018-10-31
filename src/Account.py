@@ -1,10 +1,11 @@
-from DataAccess import DataAccess
+from AbstractDataAccess import AbstractDataAccess
+from Role import Role
 
 
 class Account():
 
     @staticmethod
-    def LoadEntity(db):
+    def LoadEntity(db: AbstractDataAccess):
         db.LoadCSVTable('accounts', [
             ('act_email', 'varchar(50) primary key'),
             ('act_fname', 'varchar(50) not null'),
@@ -14,7 +15,7 @@ class Account():
             ('role_id', 'integer not null')
         ])
 
-    def __init__(self, db):
+    def __init__(self, db: AbstractDataAccess):
         self.db = db
         self.act_email = ''
         self.act_fname = ''
@@ -62,29 +63,13 @@ class Account():
             self.act_email])
         self.db.SaveCSVTable('accounts')
 
-    def __str__(self):
+    def RoleIn(self, *roles: [Role]) -> bool:
+        return Role(self.role_id) in roles
+
+    def __str__(self) -> str:
         return (self.act_email + ' - ' +
                 self.act_fname + ' - ' +
                 self.act_lname + ' - ' +
                 self.act_password + ' - ' +
                 self.act_phone + ' - ' +
                 str(self.role_id))
-
-
-if __name__ == '__main__':
-    db = DataAccess()
-    Account.LoadEntity(db)
-    act = Account(db)
-    act.act_email = 'email@gmail.com'
-    act.GetDetail()
-    print(act)
-    act.act_fname = 'my act'
-    act.Update()
-    act = Account(db)
-    act.act_email = 'dfudge@school.edu'
-    act.act_fname = 'dorris'
-    act.act_lname = 'fudge'
-    act.act_password = 'dfudge12'
-    act.act_phone = '414-444-0001'
-    act.role_id = 3
-    act.Add()

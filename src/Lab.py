@@ -1,10 +1,10 @@
-from DataAccess import DataAccess
+from AbstractDataAccess import AbstractDataAccess
 
 
 class Lab():
 
     @staticmethod
-    def LoadEntity(db):
+    def LoadEntity(db: AbstractDataAccess):
         db.LoadCSVTable('labs', [
             ('lab_id', 'integer primary key'),
             ('lab_name', 'varchar(50) not null'),
@@ -12,7 +12,7 @@ class Lab():
             ('ta_email', 'varchar(50)')
         ])
 
-    def __init__(self, db):
+    def __init__(self, db: AbstractDataAccess):
         self.db = db
         self.lab_id = -1
         self.lab_name = ''
@@ -52,25 +52,8 @@ class Lab():
         self.db.cur.execute('delete from labs where lab_id = ?', [self.lab_id])
         self.db.SaveCSVTable('labs')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (str(self.lab_id) + ' - ' +
                 self.lab_name + ' - ' +
                 str(self.course_id) + ' - ' +
                 self.ta_email)
-
-
-if __name__ == '__main__':
-    db = DataAccess()
-    Lab.LoadEntity(db)
-    l = Lab(db)
-    l.lab_id = 1
-    l.GetDetail()
-    print(l)
-    l.lab_name = 'Ayyy Lab'
-    l.Update()
-    l = Lab(db)
-    l.lab_name = 'Test Lab Add'
-    l.course_id = 3
-    l.ta_email = 'hhhh@hhhh.com'
-    l.Add()
-    print(l)
