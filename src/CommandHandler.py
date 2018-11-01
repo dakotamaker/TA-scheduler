@@ -89,7 +89,16 @@ class CommandHandler:
         print('Assign lab:', cmd)
 
     def DeleteUserHandler(self, cmd: [str]):
-        print('Delete user:', cmd)
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Administrator or Supervisor')
+            return
+        print('Delete User:', cmd)
+        user = cmd[0]
+        if not user.CanDelete():
+            print('User does not exist or is assigned to a class')
+            return
+        user.Delete()
+        print('User deleted')
 
     def DeleteCourseHandler(self, cmd: [str]):
         print('Delete course:', cmd)
