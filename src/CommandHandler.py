@@ -128,10 +128,10 @@ class CommandHandler:
         print('View lab:', cmd)
 
     def ListUsersHandler(self, cmd: [str]):
-        print('List users:', cmd)
+        Account.PrintAll(self.db)
 
     def ListCoursesHandler(self, cmd: [str]):
-        print('List courses:', cmd)
+        Course.PrintAll(self.db)
 
     def ListLabsHandler(self, cmd: [str]):
-        print('List labs:', cmd)
+        Lab.PrintAll(self.db)        

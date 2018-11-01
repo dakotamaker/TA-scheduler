@@ -1,11 +1,17 @@
 import sqlite3
 from abc import ABC, abstractmethod
 
+def dict_factory(cur, row):
+    d = {}
+    for i, col in enumerate(cur.description):
+        d[col[0]] = row[i]
+    return d
+
 class AbstractDataAccess(ABC):
 
     def __init__(self):
         self.conn = sqlite3.connect(':memory:')
-        self.conn.row_factory = sqlite3.Row
+        self.conn.row_factory = dict_factory
         self.cur = self.conn.cursor()
 
     def __del__(self):

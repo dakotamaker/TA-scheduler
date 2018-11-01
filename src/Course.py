@@ -28,6 +28,15 @@ class Course():
         self.course_name = c['course_name']
         self.instructor_email = c['instructor_email']
 
+    @staticmethod
+    def PrintAll(db: AbstractDataAccess):
+        db.cur.execute('select * from courses')
+        rows = db.cur.fetchall()
+        if len(rows) == 0:
+            return
+        for r in rows:
+            print(' | '.join(map(str, r.values())))
+
     def Exists(self) -> bool:
         self.db.cur.execute('''
             select 1

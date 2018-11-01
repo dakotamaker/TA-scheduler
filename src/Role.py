@@ -6,3 +6,4 @@ class Role(IntEnum):
     Instructor = 2
     Administrator = 3
     Supervisor = 4
+    

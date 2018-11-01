@@ -33,6 +33,15 @@ class Account():
         self.act_password = act['act_password']
         self.act_phone = act['act_phone']
         self.role_id = act['role_id']
+    
+    @staticmethod
+    def PrintAll(db: AbstractDataAccess):
+        db.cur.execute('select * from accounts')
+        rows = db.cur.fetchall()
+        if len(rows) == 0:
+            return None
+        for r in rows:
+            print(' | '.join(map(str, r.values())))
 
     def Exists(self):
         self.db.cur.execute('''
@@ -80,4 +89,4 @@ class Account():
                 self.act_lname + ' - ' +
                 self.act_password + ' - ' +
                 self.act_phone + ' - ' +
-                str(self.role_id))
+                Role(self.role_id))

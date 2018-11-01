@@ -27,6 +27,16 @@ class Lab():
         self.course_id = l['course_id']
         self.ta_email = l['ta_email']
 
+    
+    @staticmethod
+    def PrintAll(db: AbstractDataAccess):
+        db.cur.execute('select * from labs')
+        rows = db.cur.fetchall()
+        if len(rows) == 0:
+            return
+        for r in rows:
+            print(' | '.join(map(str, r.values())))
+
     def Add(self):
         # needs validation to make sure course and TA exist (and that the TA is in fact a TA)
         values = [self.lab_name, self.course_id, self.ta_email]
