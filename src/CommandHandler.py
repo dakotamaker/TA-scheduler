@@ -47,8 +47,14 @@ class CommandHandler:
         exit()
 
     def LoginHandler(self, cmd: [str]):
+        if len(cmd) != 2:
+            print('Invalid number of arguments')
+            return
         a = Account(self.db)
         a.act_email = cmd[0]
+        if not a.Exists():
+            print('Given email does not belong to an existing user')
+            return
         a.GetDetail()
         if a.act_password == cmd[1]:
             self.currentUser = a
@@ -57,6 +63,9 @@ class CommandHandler:
             print('Invalid credentials')
 
     def LogoutHandler(self, cmd: [str]):
+        if self.currentUser is None:
+            print('No user is logged in')
+            return
         self.currentUser = None
         print('Logged out')
 
@@ -70,10 +79,12 @@ class CommandHandler:
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
             print('Must be logged in as an Administrator or Supervisor')
             return
-
+        if len(cmd) != 1:
+            print('Invalid number of arguments')
+            return
         c = Course(self.db)
         c.course_name = cmd[0]
-        if not c.CanAdd():
+        if c.Exists():
             print('Course already exists')
             return
         c.Add()

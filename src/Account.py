@@ -34,6 +34,14 @@ class Account():
         self.act_phone = act['act_phone']
         self.role_id = act['role_id']
 
+    def Exists(self):
+        self.db.cur.execute('''
+            select 1
+            from accounts
+            where act_email like ?
+        ''', [self.act_email])
+        return self.db.cur.fetchone() is not None
+
     def Add(self):
         # must validate email and phone
         values = [self.act_email, self.act_fname, self.act_lname, self.act_password,

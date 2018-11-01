@@ -28,6 +28,14 @@ class Course():
         self.course_name = c['course_name']
         self.instructor_email = c['instructor_email']
 
+    def Exists(self) -> bool:
+        self.db.cur.execute('''
+            select 1
+            from courses
+            where course_name like ?
+        ''', [self.course_name])
+        return self.db.cur.fetchone() is not None
+
     def Add(self):
         # needs to validate course name
         values = [self.course_name, self.instructor_email]
@@ -52,14 +60,6 @@ class Course():
         self.db.cur.execute('delete from courses where course_id = ?', [
             self.course_id])
         self.db.SaveCSVTable('courses')
-
-    def CanAdd(self) -> bool:
-        self.db.cur.execute('''
-            select 1
-            from courses
-            where course_name like ?
-        ''', [self.course_name])
-        return self.db.cur.fetchone() is None
 
     def AssignTA(self, ta_email):
         # needs validation to make sure ta_email exists and is a TA and that the TA isn't already assigned to this course
