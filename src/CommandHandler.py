@@ -32,6 +32,16 @@ class CommandHandler:
                 'user': self.DeleteUserHandler,
                 'course': self.DeleteCourseHandler,
                 'lab': self.DeleteLabHandler
+            },
+            'view': {
+                'user': self.ViewUserHandler,
+                'course': self.ViewCourseHandler,
+                'lab': self.ViewLabHandler
+            },
+            'list': {
+                'users': self.ListUsersHandler,
+                'courses': self.ListCoursesHandler,
+                'labs': self.ListLabsHandler
             }
         }
         while type(handler) is dict:
@@ -107,3 +117,21 @@ class CommandHandler:
 
     def DeleteLabHandler(self, cmd: [str]):
         print('Delete lab:', cmd)
+
+    def ViewUserHandler(self, cmd: [str]):
+        print('View user:', cmd)
+
+    def ViewCourseHandler(self, cmd: [str]):
+        print('View course:', cmd)
+
+    def ViewLabHandler(self, cmd: [str]):
+        print('View lab:', cmd)
+
+    def ListUsersHandler(self, cmd: [str]):
+        print('List users:', cmd)
+
+    def ListCoursesHandler(self, cmd: [str]):
+        print('List courses:', cmd)
+
+    def ListLabsHandler(self, cmd: [str]):
+        print('List labs:', cmd)
