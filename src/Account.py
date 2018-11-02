@@ -84,9 +84,9 @@ class Account():
         return Role(self.role_id) in roles
 
     def __str__(self) -> str:
-        return (self.act_email + ' - ' +
-                self.act_fname + ' - ' +
-                self.act_lname + ' - ' +
-                self.act_password + ' - ' +
-                self.act_phone + ' - ' +
+        return (self.act_email + ' | ' +
+                self.act_fname + ' | ' +
+                self.act_lname + ' | ' +
+                self.act_password + ' | ' +
+                self.act_phone + ' | ' +
                 Role(self.role_id))

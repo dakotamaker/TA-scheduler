@@ -13,7 +13,11 @@ class CommandHandler:
         self.currentUser = None
 
     def ProcessCommand(self, cmdString: str):
-        cmd = shlex.split(cmdString)  # don't split quoted substrings
+        try:
+            cmd = shlex.split(cmdString)  # don't split quoted substrings
+        except:
+            print('Badly formatted command')
+            return
         handler = {
             'exit': self.ExitHandler,
             'login': self.LoginHandler,
@@ -35,11 +39,13 @@ class CommandHandler:
             },
             'view': {
                 'user': self.ViewUserHandler,
+                'ta': self.ViewTAHandler,
                 'course': self.ViewCourseHandler,
                 'lab': self.ViewLabHandler
             },
             'list': {
                 'users': self.ListUsersHandler,
+                'tas': self.ListTAsHandler,
                 'courses': self.ListCoursesHandler,
                 'labs': self.ListLabsHandler
             }
@@ -119,19 +125,73 @@ class CommandHandler:
         print('Delete lab:', cmd)
 
     def ViewUserHandler(self, cmd: [str]):
-        print('View user:', cmd)
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Administrator or a Supervisor')
+            return
+        if len(cmd) != 1:
+            print('Invalid number of arguments')
+            return
+        a = Account(self.db)
+        a.act_email = cmd[0]
+        if not a.Exists():
+            print('Given email does not belong to an existing user')
+            return
+        a.GetDetail()
+        print(a)
+
+    def ViewTAHandler(self, cmd: [str]):
+        print('View TA:', cmd)
 
     def ViewCourseHandler(self, cmd: [str]):
-        print('View course:', cmd)
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
+            return
+        if len(cmd) != 1:
+            print('Invalid number of arguments')
+            return
+        c = Course(self.db)
+        c.course_name = cmd[0]
+        if not c.Exists():
+            print('Course does not exist')
+            return
+        c.GetDetail()
+        print(c)
 
     def ViewLabHandler(self, cmd: [str]):
-        print('View lab:', cmd)
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
+            return
+        if len(cmd) != 1:
+            print('Invalid number of arguments')
+            return
+        l = Lab(self.db)
+        if not cmd[0].isdigit():
+            print('Lab ID must be a non-negative integer')
+            return
+        l.lab_id = int(cmd[0])
+        if not l.Exists():
+            print('Given lab does not exist')
+            return
+        l.GetDetail()
+        print(l)
 
     def ListUsersHandler(self, cmd: [str]):
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Administrator or a Supervisor')
+            return
         Account.PrintAll(self.db)
 
+    def ListTAsHandler(self, cmd: [str]):
+        print('List TAs:', cmd)
+
     def ListCoursesHandler(self, cmd: [str]):
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
+            return
         Course.PrintAll(self.db)
 
     def ListLabsHandler(self, cmd: [str]):
-        Lab.PrintAll(self.db)        
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
+            return
+        Lab.PrintAll(self.db)

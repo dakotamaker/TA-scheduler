@@ -22,9 +22,14 @@ class Course():
         self.instructor_email = ''
 
     def GetDetail(self):
-        self.db.cur.execute(
-            'select * from courses where course_id like ?', [self.course_id])
+        if self.course_id > -1:
+            self.db.cur.execute(
+                'select * from courses where course_id = ?', [self.course_id])
+        else:
+            self.db.cur.execute(
+                'select * from courses where course_name like ?', [self.course_name])
         c = self.db.cur.fetchone()
+        self.course_id = c['course_id']
         self.course_name = c['course_name']
         self.instructor_email = c['instructor_email']
 
@@ -83,6 +88,6 @@ class Course():
         self.db.SaveCSVTable('course_ta_xref')
 
     def __str__(self) -> str:
-        return (str(self.course_id) + ' - ' +
-                self.course_name + ' - ' +
+        return (str(self.course_id) + ' | ' +
+                self.course_name + ' | ' +
                 self.instructor_email)

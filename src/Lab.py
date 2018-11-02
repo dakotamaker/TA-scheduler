@@ -21,13 +21,21 @@ class Lab():
 
     def GetDetail(self):
         self.db.cur.execute(
-            'select * from labs where lab_id like ?', [self.lab_id])
+            'select * from labs where lab_id = ?', [self.lab_id])
         l = self.db.cur.fetchone()
+        self.lab_id = l['lab_id']
         self.lab_name = l['lab_name']
         self.course_id = l['course_id']
         self.ta_email = l['ta_email']
 
-    
+    def Exists(self):
+        self.db.cur.execute('''
+            select 1
+            from labs
+            where lab_id = ?
+        ''', [self.lab_id])
+        return self.db.cur.fetchone() is not None
+
     @staticmethod
     def PrintAll(db: AbstractDataAccess):
         db.cur.execute('select * from labs')
@@ -63,7 +71,7 @@ class Lab():
         self.db.SaveCSVTable('labs')
 
     def __str__(self) -> str:
-        return (str(self.lab_id) + ' - ' +
-                self.lab_name + ' - ' +
-                str(self.course_id) + ' - ' +
+        return (str(self.lab_id) + ' | ' +
+                self.lab_name + ' | ' +
+                str(self.course_id) + ' | ' +
                 self.ta_email)
