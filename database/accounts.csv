@@ -1,4 +1,5 @@
-act_email,act_fname,act_lname,act_password,act_phone,role_id
-email@gmail.com,my act,cooper,hunter1,123-123-1234,2
-asdf@yahoo.com,phil,smith,asdf123,999-424-4342,1
-dfudge@school.edu,dorris,fudge,dfudge12,414-444-0001,3
+act_email,act_fname,act_lname,act_password,act_phone,role_id,act_address
+email@gmail.com,my act,cooper,hunter1,123-123-1234,2,100 Main
+asdf@yahoo.com,phil,smith,asdf123,999-424-4342,1,17 Oak
+dfudge@school.edu,dorris,fudge,dfudge12,414-444-0001,3,2300 W Elm
+hi@no.com,Hi,There,,5555555555,3,532 Eff St

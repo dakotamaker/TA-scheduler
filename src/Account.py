@@ -12,7 +12,8 @@ class Account():
             ('act_lname', 'varchar(50) not null'),
             ('act_password', 'varchar(20)'),
             ('act_phone', 'varchar(12) unique not null'),
-            ('role_id', 'integer not null')
+            ('role_id', 'integer not null'),
+            ('act_address', 'varchar(70) not null')
         ])
 
     def __init__(self, db: AbstractDataAccess):
@@ -23,6 +24,7 @@ class Account():
         self.act_password = ''
         self.act_phone = ''
         self.role_id = -1
+        self.act_address = ''
 
     def GetDetail(self):
         self.db.cur.execute(
@@ -33,6 +35,7 @@ class Account():
         self.act_password = act['act_password']
         self.act_phone = act['act_phone']
         self.role_id = act['role_id']
+        self.act_address = act['act_address']
     
     @staticmethod
     def PrintAll(db: AbstractDataAccess):
@@ -54,10 +57,10 @@ class Account():
     def Add(self):
         # must validate email and phone
         values = [self.act_email, self.act_fname, self.act_lname, self.act_password,
-                  self.act_phone, self.role_id]
+                  self.act_phone, self.role_id, self.act_address]
         self.db.cur.execute('''
-            insert into accounts (act_email, act_fname, act_lname, act_password, act_phone, role_id)
-            values (?, ?, ?, ?, ?, ?)
+            insert into accounts (act_email, act_fname, act_lname, act_password, act_phone, role_id, act_address)
+            values (?, ?, ?, ?, ?, ?, ?)
         ''', values)
         self.db.SaveCSVTable('accounts')
 
@@ -70,7 +73,8 @@ class Account():
             act_lname = ?,
             act_password = ?,
             act_phone = ?,
-            role_id = ?
+            role_id = ?,
+            act_address = ?
             where act_email like ?
         ''', values)
         self.db.SaveCSVTable('accounts')
@@ -89,4 +93,5 @@ class Account():
                 self.act_lname + ' | ' +
                 self.act_password + ' | ' +
                 self.act_phone + ' | ' +
-                Role(self.role_id))
+                Role(self.role_id) + ' | ' +
+                self.act_address)

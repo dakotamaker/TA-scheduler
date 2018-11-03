@@ -56,7 +56,8 @@ class CommandHandler:
         try:
             handler(cmd)
         except Exception as e:
-            print('Handler error - ', e)
+            print('Handler error')
+            print(e)
 
     def ExitHandler(self, cmd: [str]):
         print('Exiting...')
@@ -89,7 +90,25 @@ class CommandHandler:
         print('Nofity:', cmd)
 
     def CreateUserHandler(self, cmd: [str]):
-        print('Create user:', cmd)
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Administrator or Supervisor')
+            return
+        if len(cmd) != 6:
+            print('Invalid number of arguments')
+            return
+        acc = Account(self.db)
+        acc.act_email = cmd[0]
+        acc.act_fname = cmd[1]
+        acc.act_lname = cmd[2]
+        acc.role_id = cmd[3]
+        acc.act_phone = cmd[4]
+        acc.act_address = cmd[5]
+        if acc.Exists():
+            print('User already exists.')
+            return
+        acc.Add()
+        print('User added.')
+
 
     def CreateCourseHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
