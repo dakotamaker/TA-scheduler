@@ -129,7 +129,28 @@ class CommandHandler:
         print('Create lab:', cmd)
 
     def AssignCourseHandler(self, cmd: [str]):
-        print('Assign course:', cmd)
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            print('Must be logged in as an Administrator or a Supervisor')
+            return
+        if len(cmd) != 2:
+            print('Invalid number of arguments')
+        c = Course(self.db)
+        c.course_name = cmd[0]
+        if not c.Exists():
+            print('This course does not exist.')
+            return
+        c.GetDetail()
+        c.instructor_email = cmd[1]
+
+        acc = Account(self.db)
+        acc.act_email = cmd[1]
+        acc.GetDetail()
+        if acc.role_id is None or not acc.RoleIn(Role.Instructor):
+            print('Assignee must be either an instructor')
+            return
+
+        c.Update()
+        print('Instructor assigned to course')
 
     def AssignLabHandler(self, cmd: [str]):
         print('Assign lab:', cmd)
