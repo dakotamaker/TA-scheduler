@@ -1,5 +1,6 @@
-act_email,act_fname,act_lname,act_password,act_phone,role_id,act_address
-email@gmail.com,my act,cooper,hunter1,123-123-1234,2,100 Main
-asdf@yahoo.com,phil,smith,asdf123,999-424-4342,1,17 Oak
-dfudge@school.edu,dorris,fudge,dfudge12,414-444-0001,3,2300 W Elm
-hi@no.com,Hi,There,,5555555555,3,532 Eff St
+act_email,act_fname,act_lname,act_password,act_phone,act_address,role_id
+email@gmail.com,my act,cooper,hunter1,123-123-1234,100 Main,2
+asdf@yahoo.com,phil,smith,asdf123,999-424-4342,17 Oak,1
+dfudge@school.edu,dorris,fudge,dfudge12,414-444-0001,2300 W Elm,3
+hi@no.com,Hi,There,,5555555555,532 Eff St,3
+link@notzelda.com,Link,Linkard,,222-222-2222,32 Hyrule Lane,1

@@ -56,8 +56,7 @@ class CommandHandler:
         try:
             handler(cmd)
         except Exception as e:
-            print('Handler error')
-            print(e)
+            print('Handler error -', e)
 
     def ExitHandler(self, cmd: [str]):
         print('Exiting...')
@@ -144,9 +143,12 @@ class CommandHandler:
 
         acc = Account(self.db)
         acc.act_email = cmd[1]
+        if not acc.Exists():
+            print('This user does not exist.')
+            return
         acc.GetDetail()
-        if acc.role_id is None or not acc.RoleIn(Role.Instructor):
-            print('Assignee must be either an instructor')
+        if acc.role_id is not acc.RoleIn(Role.Instructor):
+            print('Assignee must be an instructor')
             return
 
         c.Update()
