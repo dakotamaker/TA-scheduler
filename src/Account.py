@@ -12,6 +12,7 @@ class Account():
             ('act_lname', 'varchar(50) not null'),
             ('act_password', 'varchar(20)'),
             ('act_phone', 'varchar(12) unique not null'),
+            ('act_address', 'varchar(255) not null'),
             ('role_id', 'integer not null')
         ])
 
@@ -22,6 +23,7 @@ class Account():
         self.act_lname = ''
         self.act_password = ''
         self.act_phone = ''
+        self.act_address = ''
         self.role_id = -1
 
     def GetDetail(self):
@@ -32,6 +34,7 @@ class Account():
         self.act_lname = act['act_lname']
         self.act_password = act['act_password']
         self.act_phone = act['act_phone']
+        self.act_address = act['act_address']
         self.role_id = act['role_id']
     
     @staticmethod
@@ -54,22 +57,23 @@ class Account():
     def Add(self):
         # must validate email and phone
         values = [self.act_email, self.act_fname, self.act_lname, self.act_password,
-                  self.act_phone, self.role_id]
+                  self.act_phone, self.act_address, self.role_id]
         self.db.cur.execute('''
-            insert into accounts (act_email, act_fname, act_lname, act_password, act_phone, role_id)
-            values (?, ?, ?, ?, ?, ?)
+            insert into accounts (act_email, act_fname, act_lname, act_password, act_phone, act_address, role_id)
+            values (?, ?, ?, ?, ?, ?, ?)
         ''', values)
         self.db.SaveCSVTable('accounts')
 
     def Update(self):
         values = [self.act_fname, self.act_lname, self.act_password,
-                  self.act_phone, self.role_id, self.act_email]
+                  self.act_phone, self.act_address, self.role_id, self.act_email]
         self.db.cur.execute('''
             update accounts set
             act_fname = ?,
             act_lname = ?,
             act_password = ?,
             act_phone = ?,
+            act_address = ?,
             role_id = ?
             where act_email like ?
         ''', values)
@@ -89,4 +93,5 @@ class Account():
                 self.act_lname + ' | ' +
                 self.act_password + ' | ' +
                 self.act_phone + ' | ' +
+                self.act_address + ' | ' +
                 Role(self.role_id))
