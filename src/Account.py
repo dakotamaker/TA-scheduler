@@ -1,6 +1,5 @@
-from src.AbstractDataAccess import AbstractDataAccess
-from src.Role import Role
-
+from .AbstractDataAccess import AbstractDataAccess
+from .Role import Role
 
 class Account:
 

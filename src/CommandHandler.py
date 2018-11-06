@@ -1,9 +1,9 @@
-from src.AbstractDataAccess import AbstractDataAccess
-from src.Account import Account
-from src.Course import Course
-from src.Lab import Lab
-from src.Role import Role
-from src.ErrorMessages import ErrorMessages
+from .AbstractDataAccess import AbstractDataAccess
+from .Account import Account
+from .Course import Course
+from .Lab import Lab
+from .Role import Role
+from .ErrorMessages import ErrorMessages
 import shlex
 
 
@@ -61,7 +61,7 @@ class CommandHandler:
             return print('Handler error -', e)
 
     def _ExitHandler(self, cmd: [str]):
-        return print('Exiting...')
+        print('Exiting...')
         exit()
 
     def _LoginHandler(self, cmd: [str]):

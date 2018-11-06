@@ -1,7 +1,11 @@
 import unittest
 from tests.resources.TestDataAccess import TestDataAccess
+from src.AbstractDataAccess import AbstractDataAccess
 from src.Account import Account
 from src.CommandHandler import CommandHandler
+# from src.AbstractDataAccess import AbstractDataAccess
+# from src.Account import Account
+# from src.CommandHandler import CommandHandler
 
 
 class UsersAsASupervisorTest(unittest.TestCase):
@@ -41,30 +45,30 @@ class UsersAsASupervisorTest(unittest.TestCase):
     #     msg = Project.command('delete user invalid@user.com')
     #     self.assertEquals(msg, 'That user does not exist')
 
-    def test_editing_another_user_given_valid_arguments_then_user_is_edited(self):
-        Project.command('edit user ta@one.com firstName:\"newName\"')
-        self.assertEquals(self.users[0]['firstName'], 'newName')
+    # def test_editing_another_user_given_valid_arguments_then_user_is_edited(self):
+    #     Project.command('edit user ta@one.com firstName:\"newName\"')
+    #     self.assertEquals(self.users[0]['firstName'], 'newName')
 
-    def test_editing_another_user_given_attribute_that_does_not_exist_then_error_is_displayed(self):
-        msg = Project.command('edit user ta@one.com invalid:\"newName\"')
-        self.assertEquals(msg, 'That attribute does not exist')
+    # def test_editing_another_user_given_attribute_that_does_not_exist_then_error_is_displayed(self):
+    #     msg = Project.command('edit user ta@one.com invalid:\"newName\"')
+    #     self.assertEquals(msg, 'That attribute does not exist')
 
 
-class UsersAsAnInstructorTest(unittest.TestCase):
-    def setUp(self):
-        db = TestDataAccess()
-        Account.LoadEntity(db)
-        ch = CommandHandler(db)
-        ch.ProcessCommand('login asdf@yahoo.com asdf123')
+# class UsersAsAnInstructorTest(unittest.TestCase):
+#     def setUp(self):
+#         db = TestDataAccess()
+#         Account.LoadEntity(db)
+#         ch = CommandHandler(db)
+#         ch.ProcessCommand('login asdf@yahoo.com asdf123')
 
-    def test_editing_own_information_given_valid_arguments_then_user_info_is_edited(self):
-        Project.command('edit firstName:\"newName\"')
-        self.assertEquals(self.users[4]['firstName'], 'newName')
+#     def test_editing_own_information_given_valid_arguments_then_user_info_is_edited(self):
+#         Project.command('edit firstName:\"newName\"')
+#         self.assertEquals(self.users[4]['firstName'], 'newName')
 
-    def test_editing_own_information_given_invalid_arguments_then_error_is_displayed(self):
-        msg = Project.command('edit invalid:\"newName\"')
-        self.assertEquals(msg, 'That attribute does not exist')
+#     def test_editing_own_information_given_invalid_arguments_then_error_is_displayed(self):
+#         msg = Project.command('edit invalid:\"newName\"')
+#         self.assertEquals(msg, 'That attribute does not exist')
 
-    def test_try_editing_other_users_info_then_error_is_displayed(self):
-        msg = Project.command('edit user ta@one.com firstName:\"newName\"')
-        self.assertEquals(msg, 'You do not have permission to edit another user')
+#     def test_try_editing_other_users_info_then_error_is_displayed(self):
+#         msg = Project.command('edit user ta@one.com firstName:\"newName\"')
+#         self.assertEquals(msg, 'You do not have permission to edit another user')

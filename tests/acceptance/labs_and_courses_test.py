@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from project import Project
+from src.project import Project
 
 # Current user available:
 cwd = os.getcwd()
