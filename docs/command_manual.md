@@ -93,10 +93,8 @@ system, but as an instructor you will only be able to email your TAs using:
 
 As a user you will be able to view different information, but the commands you will be able to run
 will depend on the role you have
-
-- *Viewing TA assignments:* `view tas`
-    - This can be ran by any user and will show all TA assignments for all TAs
  
+#### Viewing individual things:
 - *Viewing specific user data:* `view user <email>`
     - This will show different data based on the role.
     - As an instructor or TA you will be able to see that user's public information
@@ -106,4 +104,27 @@ will depend on the role you have
     - As a supervisor or admin you will be able to see any course with that course name
     - As an instructor you will only see that course information if you're assigned to it
     - TAs will not be able to run this command
+    
+- *Viewing course assignments:* `view lab "<lab id>"`
+    - As a supervisor or admin you will be able to see any course with that course name
+    - As an instructor you will only see that lab information if you're assigned to it's course
+    - TAs will not be able to run this command
 
+#### Viewing lists of things:
+- *Viewing specific user data:* `list users`
+    - This will show different data based on the role.
+    - As an instructor or TA you will be able to see users' public information
+    - As a supervisor or admin you will see all information
+ 
+- *Viewing specific user data:* `list tas`
+    - This will do the same thing as the `view users` command, but will only show TAs
+ 
+- *Viewing course assignments:* `list courses`
+    - As a supervisor or admin you will be able to see all course
+    - As an instructor you will only see courses that you're assigned to
+    - TAs will not be able to run this command
+    
+- *Viewing course assignments:* `list labs`
+    - As a supervisor or admin you will be able to see all labs
+    - As an instructor you will only see the labs that are assigned to the course it's associated with
+    - TAs will not be able to run this command

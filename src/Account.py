@@ -93,4 +93,4 @@ class Account:
                 self.act_password + ' | ' +
                 self.act_phone + ' | ' +
                 self.act_address + ' | ' +
-                Role(self.role_id))
+                str(Role(self.role_id)).split('.', 1)[1])

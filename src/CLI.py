@@ -13,6 +13,9 @@ class CLI():
         Course.LoadEntity(db)
         Lab.LoadEntity(db)
         ch = CommandHandler(db)
+        print('********************************************************************************************************************')
+        print('Welcome. If you are a user that has never logged in before, perform the login command with your desired new password.')
+        print('********************************************************************************************************************')
         try:
             while True:
                 cmd = input('> ')

@@ -1,10 +1,10 @@
 import csv
 import sqlite3
-import os, sys
+import os
 from src.AbstractDataAccess import AbstractDataAccess
 
-
 _root = os.path.abspath(os.path.dirname(__file__))
+
 
 class TestDataAccess(AbstractDataAccess):
 
