@@ -16,7 +16,7 @@ class TestDataAccess(AbstractDataAccess):
         colNames = ', '.join(['%s' % i[0] for i in cols])
         self.cur.execute('create table %s (%s);' % (
             tableName, ', '.join(['%s %s' % (i[0], i[1]) for i in cols])))
-        with open(_root + '\\%s.csv' % tableName) as f:
+        with open(_root + '/%s.csv' % tableName) as f:
             reader = csv.reader(f)
             next(reader)  # skip col names
             values = [tuple(row) for row in reader]
