@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from src.project import Project
+from project import Project
 
 cwd = os.getcwd()
 user_data = cwd + '/tests/resources/mock_users_data.json'

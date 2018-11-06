@@ -1,8 +1,8 @@
-from AbstractDataAccess import AbstractDataAccess
-from Role import Role
+from src.AbstractDataAccess import AbstractDataAccess
+from src.Role import Role
 
 
-class Account():
+class Account:
 
     @staticmethod
     def LoadEntity(db: AbstractDataAccess):
@@ -12,7 +12,7 @@ class Account():
             ('act_lname', 'varchar(50) not null'),
             ('act_password', 'varchar(20)'),
             ('act_phone', 'varchar(12) unique not null'),
-            ('act_address', 'varchar(255) not null'),
+            ('act_address', 'varchar(255) unique not null'),
             ('role_id', 'integer not null')
         ])
 

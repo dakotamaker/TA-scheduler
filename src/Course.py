@@ -1,4 +1,4 @@
-from AbstractDataAccess import AbstractDataAccess
+from src.AbstractDataAccess import AbstractDataAccess
 
 
 class Course():

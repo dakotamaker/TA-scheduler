@@ -1,8 +1,8 @@
-from DataAccess import DataAccess
-from Account import Account
-from Course import Course
-from Lab import Lab
-from CommandHandler import CommandHandler
+from src.DataAccess import DataAccess
+from src.Account import Account
+from src.Course import Course
+from src.Lab import Lab
+from src.CommandHandler import CommandHandler
 
 if __name__ == '__main__':
     db = DataAccess()
@@ -10,6 +10,12 @@ if __name__ == '__main__':
     Course.LoadEntity(db)
     Lab.LoadEntity(db)
     ch = CommandHandler(db)
-    while True:
-        cmd = input('> ')
-        ch.ProcessCommand(cmd)
+    try:
+        while True:
+            cmd = input('> ')
+            ch.ProcessCommand(cmd)
+    except KeyError:
+        print('Invalid command')
+        while True:
+            cmd = input('> ')
+            ch.ProcessCommand(cmd)

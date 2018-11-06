@@ -12,3 +12,7 @@ This project is owned by Team Undefined. Send any one of the following team memb
 
 # References
 A command manual has been created for the time being as this is currently just a command line interface. The manual can be [found here](docs/command_manual.md)
+
+# Running locally
+To run the CLI locally, you can navigate to the the `/src`
+directory and in the terminal run: `python CLI.py`
