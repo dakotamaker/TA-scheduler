@@ -16,12 +16,10 @@ class CLI():
         print('********************************************************************************************************************')
         print('Welcome. If you are a user that has never logged in before, perform the login command with your desired new password.')
         print('********************************************************************************************************************')
-        try:
-            while True:
-                cmd = input('> ')
-                ch.ProcessCommand(cmd)
-        except KeyError:
-            print('Invalid command')
-            while True:
-                cmd = input('> ')
-                ch.ProcessCommand(cmd)
+        while True:
+            try:
+                while True:
+                    cmd = input('> ')
+                    ch.ProcessCommand(cmd)
+            except KeyError:
+                print('Invalid command')
