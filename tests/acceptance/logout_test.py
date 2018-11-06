@@ -1,22 +1,21 @@
 import unittest
-import json
-import os
-from src.project import Project
-
-# Current user available:
-cwd = os.getcwd()
-user_data = cwd + '/tests/resources/mock_users_data.json'
-with open(user_data, 'r') as u_data:
-    users = json.load(u_data)
+from tests.resources.TestDataAccess import TestDataAccess
+from src.Account import Account
+from src.CommandHandler import CommandHandler
 
 
 # All are related to PBI number 25
 class LogoutTest(unittest.TestCase):
+    def setUp(self):
+        self.db = TestDataAccess()
+        Account.LoadEntity(self.db)
+        self.ch = CommandHandler(self.db)
+
     def test_given_user_is_already_logged_in__then_user_is_logged_out(self):
-        Project.command('login ta@one.com test')
-        msg = Project.command('logout')
-        self.assertEqual(msg, 'Goodbye, ta one')
+        self.ch.ProcessCommand('login dfudge@school.edu dfudge12')
+        msg = self.ch.ProcessCommand('logout')
+        self.assertEqual(msg, 'Logged out')
     
     def test_given_user_is_not_logged_in__then_error_message_is_displayed(self):
-        msg = Project.command('logout')
-        self.assertEqual(msg, 'There are no users to sign out')
+        msg = self.ch.ProcessCommand('logout')
+        self.assertEqual(msg, 'No user is logged in')

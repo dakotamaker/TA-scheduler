@@ -1,8 +1,9 @@
-from AbstractDataAccess import AbstractDataAccess
-from Account import Account
-from Course import Course
-from Lab import Lab
-from Role import Role
+from .AbstractDataAccess import AbstractDataAccess
+from .Account import Account
+from .Course import Course
+from .Lab import Lab
+from .Role import Role
+from .ErrorMessages import ErrorMessages
 import shlex
 
 
@@ -16,85 +17,115 @@ class CommandHandler:
         try:
             cmd = shlex.split(cmdString)  # don't split quoted substrings
         except:
-            print('Badly formatted command')
-            return
+            return self._printAndReturnNonDatabaseMessages('Badly formatted command')
+
         handler = {
-            'exit': self.ExitHandler,
-            'login': self.LoginHandler,
-            'logout': self.LogoutHandler,
-            'notify': self.NotifyHandler,
+            'exit': self._ExitHandler,
+            'login': self._LoginHandler,
+            'logout': self._LogoutHandler,
+            'notify': self._NotifyHandler,
+            'edit': self._EditHandler,
             'create': {
-                'user': self.CreateUserHandler,
-                'course': self.CreateCourseHandler,
-                'lab': self.CreateLabHandler
+                'user': self._CreateUserHandler,
+                'course': self._CreateCourseHandler,
+                'lab': self._CreateLabHandler
             },
             'assign': {
-                'course': self.AssignCourseHandler,
-                'lab': self.AssignLabHandler
+                'course': self._AssignCourseHandler,
+                'lab': self._AssignLabHandler
             },
             'delete': {
-                'user': self.DeleteUserHandler,
-                'course': self.DeleteCourseHandler,
-                'lab': self.DeleteLabHandler
+                'user': self._DeleteUserHandler,
+                'course': self._DeleteCourseHandler,
+                'lab': self._DeleteLabHandler
             },
             'view': {
-                'user': self.ViewUserHandler,
-                'ta': self.ViewTAHandler,
-                'course': self.ViewCourseHandler,
-                'lab': self.ViewLabHandler
+                'user': self._ViewUserHandler,
+                'course': self._ViewCourseHandler,
+                'lab': self._ViewLabHandler
             },
             'list': {
-                'users': self.ListUsersHandler,
-                'tas': self.ListTAsHandler,
-                'courses': self.ListCoursesHandler,
-                'labs': self.ListLabsHandler
+                'users': self._ListUsersHandler,
+                'tas': self._ListTAsHandler,
+                'courses': self._ListCoursesHandler,
+                'labs': self._ListLabsHandler
             }
         }
         while type(handler) is dict:
             handler = handler[cmd[0].lower()]
             cmd.pop(0)
         try:
-            handler(cmd)
+            return handler(cmd)
         except Exception as e:
-            print('Handler error -', e)
+            return self._printAndReturnNonDatabaseMessages('Handler error - %s' % e)
 
-    def ExitHandler(self, cmd: [str]):
+    def _ExitHandler(self, cmd: [str]):
         print('Exiting...')
         exit()
 
-    def LoginHandler(self, cmd: [str]):
+    def _LoginHandler(self, cmd: [str]):
         if len(cmd) != 2:
-            print('Invalid number of arguments')
-            return
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         a = Account(self.db)
         a.act_email = cmd[0]
         if not a.Exists():
-            print('Given email does not belong to an existing user')
-            return
+            return self._printAndReturnNonDatabaseMessages('Given email does not belong to an existing user')
         a.GetDetail()
-        if a.act_password == cmd[1]:
-            self.currentUser = a
-            print('Logged in as', cmd[0])
+        if a.act_password != '':
+            if a.act_password == cmd[1]:
+                self.currentUser = a
+                return self._printAndReturnNonDatabaseMessages('Logged in as %s' % cmd[0])
+            else:
+                return self._printAndReturnNonDatabaseMessages('Invalid credentials')
         else:
-            print('Invalid credentials')
+            self._updateAccountInfo(a, 'act_password:%s' % cmd[1])
+            self.currentUser = a
+            return self._printAndReturnNonDatabaseMessages('Logged in as %s, your new password has been saved' % cmd[0])
 
-    def LogoutHandler(self, cmd: [str]):
+    def _LogoutHandler(self, cmd: [str]):
         if self.currentUser is None:
-            print('No user is logged in')
-            return
+            return self._printAndReturnNonDatabaseMessages('No user is logged in')
         self.currentUser = None
-        print('Logged out')
+        return self._printAndReturnNonDatabaseMessages('Logged out')
 
-    def NotifyHandler(self, cmd: [str]):
-        print('Nofity:', cmd)
+    def _EditHandler(self, cmd: [str]):
+        user = Account(self.db)
+        if self.currentUser is None:
+            return self._printAndReturnNonDatabaseMessages('Must be logged in to edit an account')
+        elif self.currentUser is self.currentUser.RoleIn(Role.Supervisor) or self.currentUser.RoleIn(Role.Administrator):
+            print(len(cmd))
+            if len(cmd) != 1 and len(cmd) != 3:
+                return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+            user.act_email = self.currentUser.act_email if cmd[0] != 'user' else cmd[1]
+            if user.Exists():
+                (lambda: self._updateAccountInfo(user, cmd[0]), lambda: self._updateAccountInfo(user, cmd[2]))[cmd[0] == 'user']()
+            else:
+                return self._printAndReturnNonDatabaseMessages('%s does not exist' % user.act_email)
+        else:
+            if len(cmd) != 1:
+                return self._printAndReturnNonDatabaseMessages('Only supervisors or admins can edit another user.')
+            self._updateAccountInfo(self.currentUser, cmd)
 
-    def CreateUserHandler(self, cmd: [str]):
+    def _NotifyHandler(self, cmd: [str]):
+        if self.currentUser is None or self.currentUser.RoleIn(Role.TA):
+            return self._printAndReturnNonDatabaseMessages('TAs cannot send notifications')
+        elif self.currentUser.RoleIn(Role.Instructor):
+            # Logic to look for TA that is in the instructor's class, to implement later
+            return
+        if len(cmd) != 3:
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+        user = Account(self.db)
+        user.act_email = cmd[0]
+        if user.Exists():
+            return self._printAndReturnNonDatabaseMessages('Notification email sent to %s!' % user.act_email)
+        else:
+            return self._printAndReturnNonDatabaseMessages('This user does not exist')
+
+    def _CreateUserHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Administrator or Supervisor')
-            return
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Administrator or Supervisor')
         if len(cmd) != 6:
-            print('Invalid number of arguments')
-            return
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         acc = Account(self.db)
         acc.act_email = cmd[0]
         acc.act_fname = cmd[1]
@@ -103,137 +134,134 @@ class CommandHandler:
         acc.act_phone = cmd[4]
         acc.act_address = cmd[5]
         if acc.Exists():
-            print('User already exists.')
-            return
+            return self._printAndReturnNonDatabaseMessages('User already exists.')
         acc.Add()
-        print('User added.')
+        return self._printAndReturnNonDatabaseMessages('User added.')
 
-
-    def CreateCourseHandler(self, cmd: [str]):
+    def _CreateCourseHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Administrator or Supervisor')
-            return
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Administrator or Supervisor')
         if len(cmd) != 1:
-            print('Invalid number of arguments')
-            return
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         c = Course(self.db)
         c.course_name = cmd[0]
         if c.Exists():
-            print('Course already exists')
-            return
+            return self._printAndReturnNonDatabaseMessages('Course already exists.')
         c.Add()
-        print('Course added')
+        return self._printAndReturnNonDatabaseMessages('Course added')
 
-    def CreateLabHandler(self, cmd: [str]):
-        print('Create lab:', cmd)
+    def _CreateLabHandler(self, cmd: [str]):
+        return self._printAndReturnNonDatabaseMessages('Create lab:', cmd)
 
-    def AssignCourseHandler(self, cmd: [str]):
+    def _AssignCourseHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Administrator or a Supervisor')
-            return
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Administrator or a Supervisor')
         if len(cmd) != 2:
-            print('Invalid number of arguments')
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         c = Course(self.db)
         c.course_name = cmd[0]
         if not c.Exists():
-            print('This course does not exist.')
-            return
+            return self._printAndReturnNonDatabaseMessages('This course does not exist.')
         c.GetDetail()
         c.instructor_email = cmd[1]
 
         acc = Account(self.db)
         acc.act_email = cmd[1]
         if not acc.Exists():
-            print('This user does not exist.')
-            return
+            return self._printAndReturnNonDatabaseMessages('This user does not exist.')
         acc.GetDetail()
-        if acc.role_id is not acc.RoleIn(Role.Instructor):
-            print('Assignee must be an instructor')
-            return
-
+        if not acc.RoleIn(Role.Instructor):
+            return self._printAndReturnNonDatabaseMessages('Assignee must be an instructor')
         c.Update()
-        print('Instructor assigned to course')
+        return self._printAndReturnNonDatabaseMessages('Instructor assigned to course')
 
-    def AssignLabHandler(self, cmd: [str]):
-        print('Assign lab:', cmd)
+    def _AssignLabHandler(self, cmd: [str]):
+        return self._printAndReturnNonDatabaseMessages('Assign lab:', cmd)
 
-    def DeleteUserHandler(self, cmd: [str]):
-        print('Delete user:', cmd)
-
-    def DeleteCourseHandler(self, cmd: [str]):
-        print('Delete course:', cmd)
-
-    def DeleteLabHandler(self, cmd: [str]):
-        print('Delete lab:', cmd)
-
-    def ViewUserHandler(self, cmd: [str]):
+    def _DeleteUserHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Administrator or a Supervisor')
-            return
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Administrator or a Supervisor')
         if len(cmd) != 1:
-            print('Invalid number of arguments')
-            return
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         a = Account(self.db)
         a.act_email = cmd[0]
         if not a.Exists():
-            print('Given email does not belong to an existing user')
-            return
-        a.GetDetail()
-        print(a)
+            return self._printAndReturnNonDatabaseMessages('Given email does not belong to an existing user')
+        a.Delete()
+        return self._printAndReturnNonDatabaseMessages('Removed %s' % cmd[0])
 
-    def ViewTAHandler(self, cmd: [str]):
-        print('View TA:', cmd)
+    def _DeleteCourseHandler(self, cmd: [str]):
+        return self._printAndReturnNonDatabaseMessages('Delete course:', cmd)
 
-    def ViewCourseHandler(self, cmd: [str]):
-        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
-            return
+    def _DeleteLabHandler(self, cmd: [str]):
+        return self._printAndReturnNonDatabaseMessages('Delete lab:', cmd)
+
+    def _ViewUserHandler(self, cmd: [str]):
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Administrator or a Supervisor')
         if len(cmd) != 1:
-            print('Invalid number of arguments')
-            return
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+        a = Account(self.db)
+        a.act_email = cmd[0]
+        if not a.Exists():
+            return self._printAndReturnNonDatabaseMessages('Given email does not belong to an existing user')
+        a.GetDetail()
+        return self._printAndReturnNonDatabaseMessages(a.__str__())
+
+    def _ViewCourseHandler(self, cmd: [str]):
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Instructor, Administrator, or a Supervisor')
+        if len(cmd) != 1:
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         c = Course(self.db)
         c.course_name = cmd[0]
         if not c.Exists():
-            print('Course does not exist')
-            return
+            return self._printAndReturnNonDatabaseMessages('Course does not exist')
         c.GetDetail()
-        print(c)
+        return self._printAndReturnNonDatabaseMessages(c.__str__())
 
-    def ViewLabHandler(self, cmd: [str]):
+    def _ViewLabHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
-            return
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Instructor, Administrator, or a Supervisor')
         if len(cmd) != 1:
-            print('Invalid number of arguments')
-            return
+            return self._printAndReturnNonDatabaseMessages(ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
         l = Lab(self.db)
         if not cmd[0].isdigit():
-            print('Lab ID must be a non-negative integer')
-            return
+            return self._printAndReturnNonDatabaseMessages('Lab ID must be a non-negative integer')
         l.lab_id = int(cmd[0])
         if not l.Exists():
-            print('Given lab does not exist')
-            return
+            return self._printAndReturnNonDatabaseMessages('Given lab does not exist')
         l.GetDetail()
-        print(l)
+        return self._printAndReturnNonDatabaseMessages(l.__str__())
 
-    def ListUsersHandler(self, cmd: [str]):
+    def _ListUsersHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Administrator or a Supervisor')
-            return
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Administrator or a Supervisor')
+
         Account.PrintAll(self.db)
 
-    def ListTAsHandler(self, cmd: [str]):
-        print('List TAs:', cmd)
+    def _ListTAsHandler(self, cmd: [str]):
+        return self._printAndReturnNonDatabaseMessages('List TAs:', cmd)
 
-    def ListCoursesHandler(self, cmd: [str]):
+    def _ListCoursesHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
-            return
-        Course.PrintAll(self.db)
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Instructor, Administrator, or a Supervisor')
 
-    def ListLabsHandler(self, cmd: [str]):
+        return Course.PrintAll(self.db)
+
+    def _ListLabsHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
-            print('Must be logged in as an Instructor, Administrator, or a Supervisor')
-            return
-        Lab.PrintAll(self.db)
+            return self._printAndReturnNonDatabaseMessages('Must be logged in as an Instructor, Administrator, or a Supervisor')
+        return Lab.PrintAll(self.db)
+
+    def _printAndReturnNonDatabaseMessages(self, message: str):
+        print(message)
+        return message
+
+    def _updateAccountInfo(self, account: Account, value: str):
+        new_value = value.split(":")
+        if len(new_value) != 2:
+            return self._printAndReturnNonDatabaseMessages('To edit an account you need a semicolon')
+        account.GetDetail()
+        setattr(account, new_value[0], new_value[1])
+        account.Update()

@@ -1,8 +1,7 @@
-from AbstractDataAccess import AbstractDataAccess
-from Role import Role
+from .AbstractDataAccess import AbstractDataAccess
+from .Role import Role
 
-
-class Account():
+class Account:
 
     @staticmethod
     def LoadEntity(db: AbstractDataAccess):
@@ -12,7 +11,7 @@ class Account():
             ('act_lname', 'varchar(50) not null'),
             ('act_password', 'varchar(20)'),
             ('act_phone', 'varchar(12) unique not null'),
-            ('act_address', 'varchar(255) not null'),
+            ('act_address', 'varchar(255) unique not null'),
             ('role_id', 'integer not null')
         ])
 
@@ -94,4 +93,4 @@ class Account():
                 self.act_password + ' | ' +
                 self.act_phone + ' | ' +
                 self.act_address + ' | ' +
-                Role(self.role_id))
+                str(Role(self.role_id)).split('.', 1)[1])

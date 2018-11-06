@@ -1,6 +1,7 @@
 import sqlite3
 from abc import ABC, abstractmethod
 
+
 def dict_factory(cur, row):
     d = {}
     for i, col in enumerate(cur.description):

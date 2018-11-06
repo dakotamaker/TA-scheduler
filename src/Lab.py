@@ -1,7 +1,7 @@
-from AbstractDataAccess import AbstractDataAccess
+from .AbstractDataAccess import AbstractDataAccess
 
 
-class Lab():
+class Lab:
 
     @staticmethod
     def LoadEntity(db: AbstractDataAccess):

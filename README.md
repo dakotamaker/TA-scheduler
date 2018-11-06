@@ -1,5 +1,5 @@
 # TA-Scheduler
-Into to Software engineering project to create a web based TA scheduling system
+Intro to Software engineering project to create a web based TA scheduling system
 
 # Ownership
 This project is owned by Team Undefined. Send any one of the following team members an email for issue-tracking purposes:
@@ -12,3 +12,9 @@ This project is owned by Team Undefined. Send any one of the following team memb
 
 # References
 A command manual has been created for the time being as this is currently just a command line interface. The manual can be [found here](docs/command_manual.md)
+
+# Running locally
+To run the CLI locally, run `python run.py` from the root directory
+
+# Testing locally
+To run the tests, run `python test_runner.py` from the root directory
