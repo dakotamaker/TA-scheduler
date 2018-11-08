@@ -151,7 +151,7 @@ class CommandHandler:
         return self._printAndReturnNonDatabaseMessages('Course added')
 
     def _CreateLabHandler(self, cmd: [str]):
-        return self._printAndReturnNonDatabaseMessages('Create lab:', cmd)
+        return self._printAndReturnNonDatabaseMessages('Create lab:' + cmd)
 
     def _AssignCourseHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -176,7 +176,7 @@ class CommandHandler:
         return self._printAndReturnNonDatabaseMessages('Instructor assigned to course')
 
     def _AssignLabHandler(self, cmd: [str]):
-        return self._printAndReturnNonDatabaseMessages('Assign lab:', cmd)
+        return self._printAndReturnNonDatabaseMessages('Assign lab:' + cmd)
 
     def _DeleteUserHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -191,10 +191,10 @@ class CommandHandler:
         return self._printAndReturnNonDatabaseMessages('Removed %s' % cmd[0])
 
     def _DeleteCourseHandler(self, cmd: [str]):
-        return self._printAndReturnNonDatabaseMessages('Delete course:', cmd)
+        return self._printAndReturnNonDatabaseMessages('Delete course:' + cmd)
 
     def _DeleteLabHandler(self, cmd: [str]):
-        return self._printAndReturnNonDatabaseMessages('Delete lab:', cmd)
+        return self._printAndReturnNonDatabaseMessages('Delete lab:' + cmd)
 
     def _ViewUserHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -241,7 +241,7 @@ class CommandHandler:
         Account.PrintAll(self.db)
 
     def _ListTAsHandler(self, cmd: [str]):
-        return self._printAndReturnNonDatabaseMessages('List TAs:', cmd)
+        return self._printAndReturnNonDatabaseMessages('List TAs:' + cmd)
 
     def _ListCoursesHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
