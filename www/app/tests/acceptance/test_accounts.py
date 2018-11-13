@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .domain.models import Account
+from ...domain.models import Account
 
 
 class AccountTestCase(TestCase):

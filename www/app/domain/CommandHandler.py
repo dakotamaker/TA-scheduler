@@ -1,7 +1,6 @@
-from .AbstractDataAccess import AbstractDataAccess
-from .Account import Account
-from .Course import Course
-from .Lab import Lab
+from www.app.domain.models.Account import Account
+from www.app.domain.models.Course import Course
+from www.app.domain.models.Lab import Lab
 from .Role import Role
 from .ErrorMessages import ErrorMessages
 import shlex
@@ -9,8 +8,7 @@ import shlex
 
 class CommandHandler:
 
-    def __init__(self, db: AbstractDataAccess):
-        self.db = db
+    def __init__(self):
         self.currentUser = None
 
     def ProcessCommand(self, cmdString: str):
