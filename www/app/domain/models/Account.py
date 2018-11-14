@@ -1,5 +1,5 @@
 from django.db import models
-from .. import Role
+from ..Role import Role
 
 
 class Account(models.Model):
@@ -14,12 +14,3 @@ class Account(models.Model):
 
     def RoleIn(self, *roles: [Role]) -> bool:
         return Role(self.role_id) in roles
-
-    def __str__(self) -> str:
-        return (self.act_email + ' | ' +
-                self.act_fname + ' | ' +
-                self.act_lname + ' | ' +
-                self.act_password + ' | ' +
-                self.act_phone + ' | ' +
-                self.act_address + ' | ' +
-                str(Role(self.role_id)).split('.', 1)[1])
