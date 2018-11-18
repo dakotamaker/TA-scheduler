@@ -54,9 +54,13 @@ has to exist before assignment.
 ## Create a user
 - ***Role(s) needed:** Supervisor or admin* 
 
-As a supervisor or admin you can create a user using:
+As a supervisor or admin you can create a user using: _(For another admin or supervisor)_
 
 `create user <email> <first name> <last name> <role> <phone number without special characters> "<address>"`
+
+or: _(For a TA or instructor)_
+
+`create user <email> <first name> <last name> <role> <phone number without special characters> "<address>" "<office hours>" "<office location>"`
 
 Once the user is created then the user will be able to log in.
 
