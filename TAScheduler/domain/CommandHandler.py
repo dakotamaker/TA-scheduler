@@ -71,8 +71,9 @@ class CommandHandler:
     def _LoginHandler(self, cmd: [str]):
         if len(cmd) != 2:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
-        a = Account.objects.get(act_email=cmd[0])
-        if not a:
+        try:
+            a = Account.objects.get(act_email=cmd[0])
+        except Exception:
             return 'Given email does not belong to an existing user'
         if a.act_password != '':
             if a.act_password == cmd[1]:
