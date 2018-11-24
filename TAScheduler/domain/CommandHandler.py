@@ -19,7 +19,7 @@ class CommandHandler:
             return 'Badly formatted command'
 
         handler = {
-            'exit': self._ExitHandler,
+            'help': self._HelpHandler,
             'login': self._LoginHandler,
             'logout': self._LogoutHandler,
             'notify': self._NotifyHandler,
@@ -64,9 +64,8 @@ class CommandHandler:
         except Exception as e:
             return 'Handler error - %s' % e
 
-    def _ExitHandler(self, cmd: [str]):
-        print('Exiting...')
-        exit()
+    def _HelpHandler(self, cmd: [str]):
+        return 'this is the help\nmenu right here\nnew line'
 
     def _LoginHandler(self, cmd: [str]):
         if len(cmd) != 2:

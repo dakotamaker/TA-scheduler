@@ -16,9 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
-from TAScheduler.views import index
+import TAScheduler.views as views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    path('', index.as_view()),
+    path('', views.index, name='index'),
+    path('command', views.command, name='command')
 ]

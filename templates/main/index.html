@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>TA Scheduler</h1>
-  <form method="post" action="/">
+  <form method="post" action="/command">
   {% csrf_token %}
-  command: <input type="text" name="command"/><input type="submit"/>
+  command: <input type="text" name="cmd"/><input type="submit"/>
   </form>
-  <div id="out">{{out}}</div>
+    <br>
+    <br>
+    <div class="out">{{ out | safe}}</div>
 {% endblock content %}
