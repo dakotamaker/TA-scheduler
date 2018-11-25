@@ -107,17 +107,17 @@ class CommandHandler:
                 return 'To edit an account you need a semicolon'
             a.__setattr__(new_value[0], new_value[1])
             a.save()
-            print("Edit successful")
+            return "Edit successful"
         else:
             if len(cmd) != 1:
-                print ('Only supervisors or admins can edit another user.')
+                return 'Only supervisors or admins can edit another user'
             attr = cmd[0]
             new_value = attr.split(":")
             if len(new_value) != 2:
                 return 'To edit an account you need a semicolon'
             self.currentUser.__setattr__(new_value[0], new_value[1])
             self.currentUser.save()
-            print("Edit successful")
+            return "Edit successful"
 
     def _NotifyHandler(self, cmd: [str]):
         if not self.currentUser or self.currentUser.RoleIn(Role.TA):
@@ -232,7 +232,7 @@ class CommandHandler:
         a = Account.objects.filter(role_id=Role.TA)
         s = ""
         for ta in a:
-            s += ta.act_fname
+            s += "\n" + ta.act_fname
             s += " " + ta.act_lname + ": "
             c = Course.objects.filter(tas__act_email=ta.act_email)
             for course in c:
@@ -242,7 +242,7 @@ class CommandHandler:
                 s += lab.lab_name + "\t"
 
 
-        return 'List TAs: \n' + s
+        return 'List TAs: ' + s
 
     def _ListCoursesHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,

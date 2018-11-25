@@ -1,6 +1,8 @@
 from django.test import TestCase
 from ..models import Account
 from ..models import Course
+from ..domain.CommandHandler import CommandHandler
+from ..domain.ErrorMessages import ErrorMessages
 
 class CreateCoursesTestCase(TestCase):
     def setUp(self):
@@ -17,31 +19,94 @@ class CreateCoursesTestCase(TestCase):
                                act_password='1111', act_address='24 Second St', act_phone='111-111-1111', role_id=1,
                                act_officehours="1-2", act_officelocation="EMS 121")
 
-        Course.objects.create(course_id='535', course_name='Algorithms', instructor=instructor@email.com, tas=ta@email.com)
 
     def test_without_valid_login__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Must be logged in as an Administrator or Supervisor')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+
 
     def test_with_supervisor_adding_new_course__then_course_created(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login super@email.com 4444")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Course added')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 1)
 
     def test_with_supervisor_adding_existing_course__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login super@email.com 4444")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+        ch.ProcessCommand("create course 'Algorithms'")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 1)
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Course already exists')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 1)
 
     def test_with_administrator_adding_new_course__then_course_created(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login admin@email.com 3333")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Course added')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 1)
 
     def test_with_administrator_adding_existing_course__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login admin@email.com 3333")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+        ch.ProcessCommand("create course 'Algorithms'")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 1)
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Course already exists')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 1)
 
     def test_with_instructor__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login instructor@email.com 2222")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Must be logged in as an Administrator or Supervisor')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
 
     def test_with_ta__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login ta@email.com 1111")
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
+        msg = ch.ProcessCommand("create course 'Algorithms'")
+        self.assertEqual(msg, 'Must be logged in as an Administrator or Supervisor')
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
 
     def test_given_too_few_arguments__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login super@email.com 4444")
+        msg = ch.ProcessCommand("create course")
+        self.assertEqual(msg, ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+        c = Course.objects.filter(course_name='')
+        self.assertEquals(c.count(), 0)
+
 
     def test_given_too_many_arguments__then_create_fails(self):
-        pass
+        ch = CommandHandler()
+        ch.ProcessCommand("login super@email.com 4444")
+        msg = ch.ProcessCommand("create course 'Algorithms' asdfasdf")
+        self.assertEqual(msg, ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+        c = Course.objects.filter(course_name='Algorithms')
+        self.assertEquals(c.count(), 0)
