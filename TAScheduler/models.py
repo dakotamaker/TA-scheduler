@@ -21,7 +21,7 @@ class Account(models.Model):
 
 class Course(models.Model):
 
-    course_id = models.IntegerField(primary_key=True)
+    course_id = models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=50, unique=True)
     instructor = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
     tas = models.ManyToManyField(Account, blank=True, related_name='courses')
@@ -29,7 +29,7 @@ class Course(models.Model):
 
 class Lab(models.Model):
 
-    lab_id = models.IntegerField(primary_key=True)
+    lab_id = models.AutoField(primary_key=True)
     lab_name = models.CharField(max_length=50)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     ta = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)

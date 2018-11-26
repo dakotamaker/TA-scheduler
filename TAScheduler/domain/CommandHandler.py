@@ -10,7 +10,8 @@ class CommandHandler:
         self.currentUser = None
         Account.objects.get_or_create(act_email='supervisor@email.com', act_fname='supervisor', act_lname='user',
                                       act_password='password', act_address='1234 Main St., Milwaukee, WI',
-                                      act_phone='123-123-1234', role_id=4, act_officelocation="none", act_officehours="none")
+                                      act_phone='123-123-1234', role_id=4, act_officelocation="none",
+                                      act_officehours="none")
 
     def ProcessCommand(self, cmdString: str) -> str:
         try:
@@ -98,7 +99,8 @@ class CommandHandler:
             if len(cmd) != 1 and len(cmd) != 3:
                 return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
             try:
-                a = Account.objects.get(act_email=self.currentUser.act_email if cmd[0] != 'user' else cmd[1])
+                a = Account.objects.get(
+                    act_email=self.currentUser.act_email if cmd[0] != 'user' else cmd[1])
                 attr = cmd[0] if cmd[0] != 'user' else cmd[2]
             except Exception:
                 return "Given email does not belong to an existing user"
@@ -172,12 +174,35 @@ class CommandHandler:
         return 'Course added'
 
     def _CreateLabHandler(self, cmd: [str]):
-        return 'Create lab:' + cmd
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 2:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        c = Course.objects.filter(course_name=cmd[0]).first()
+        if not c:
+            return 'A course with that name does not exist'
+        l = Lab.objects.filter(lab_name=cmd[1], course=c).first()
+        if l:
+            return 'A lab with that name already exists for this course'
+        l = Lab()
+        l.lab_name = cmd[1]
+        l.course = c
+        l.save()
+        return 'Lab created'
 
     def _AssignCourseTAHandler(self, cmd: [str]):
-        c = Course.objects.get(course_name=cmd[0])
-        a = Account.objects.get(act_email=cmd[1])
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 2:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        c = Course.objects.filter(course_name=cmd[0]).first()
+        if not c:
+            return 'A course with that name does not exist'
+        a = Account.objects.filter(act_email=cmd[1]).first()
+        if not a or not a.RoleIn(Role.TA):
+            return 'Only existing TAs can be assigned to the course'
         c.tas.add(a)
+        return 'TA assigned to course'
 
     def _AssignCourseInstructorHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -201,7 +226,22 @@ class CommandHandler:
         return 'Instructor assigned to course'
 
     def _AssignLabHandler(self, cmd: [str]):
-        return 'Assign lab:' + cmd
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 3:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        c = Course.objects.filter(course_name=cmd[0]).first()
+        if not c:
+            return 'A course with that name does not exist'
+        l = Lab.objects.filter(lab_name=cmd[1], course=c).first()
+        if not l:
+            return 'Lab for that course does not exist'
+        a = c.tas.filter(act_email=cmd[2]).first()
+        if not a:
+            return 'Only TAs assigned to the course can be assigned to the lab'
+        l.ta = a
+        l.save()
+        return 'Assigned TA to lab'
 
     def _DeleteUserHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -219,7 +259,18 @@ class CommandHandler:
         return 'Delete course:' + cmd
 
     def _DeleteLabHandler(self, cmd: [str]):
-        return 'Delete lab:' + cmd
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 2:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        c = Course.objects.filter(course_name=cmd[0]).first()
+        if not c:
+            return 'A course with that name does not exist'
+        l = Lab.objects.filter(lab_name=cmd[1], course=c).first()
+        if not l:
+            return 'A lab with that name does not exist for this course'
+        l.delete()
+        return 'Lab deleted'
 
     def _ViewUserHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -229,14 +280,14 @@ class CommandHandler:
 
     def _ViewCourseHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
-                                                                   Role.Supervisor):
+                                                               Role.Supervisor):
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
 
     def _ViewLabHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
-                                                                   Role.Supervisor):
+                                                               Role.Supervisor):
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
@@ -260,15 +311,14 @@ class CommandHandler:
             for lab in l:
                 s += lab.lab_name + "\t"
 
-
         return 'List TAs: ' + s
 
     def _ListCoursesHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
-                                                                   Role.Supervisor):
+                                                               Role.Supervisor):
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
 
     def _ListLabsHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
-                                                                   Role.Supervisor):
+                                                               Role.Supervisor):
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
