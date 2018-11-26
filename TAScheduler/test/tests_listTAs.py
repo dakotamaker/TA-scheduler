@@ -49,6 +49,5 @@ class ListTAsTestCase(TestCase):
         ch = CommandHandler()
         ch.ProcessCommand("login ta1@email.com 1111")
         msg = ch.ProcessCommand("list tas")
-        print(msg)
         self.assertEqual(msg, 'List TAs: \nTA1 Student: Algorithms\tAlgoLab\t\nTA2 Student: Databases\tDataLab\t\nTA3 Student: Algorithms\tDatabases\t\nTA4 Student: ')
 

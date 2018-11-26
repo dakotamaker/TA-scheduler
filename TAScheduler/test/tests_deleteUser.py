@@ -3,7 +3,7 @@ from ..models import Account
 from ..domain.CommandHandler import CommandHandler
 from ..domain.ErrorMessages import ErrorMessages
 
-class EditTestCase(TestCase):
+class DeleteUserTestCase(TestCase):
     def setUp(self):
         Account.objects.create(act_email='super@email.com', act_fname='Super', act_lname='Visor',
                                act_password='4444', act_address='123 main st.', act_phone='444-444-4444', role_id=4,
