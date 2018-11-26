@@ -126,7 +126,7 @@ class EditTestCase(TestCase):
     def test_given_too_few_arguments__then_edits_fail(self):
         ch = CommandHandler()
         ch.ProcessCommand("login super@email.com 4444")
-        msg = ch.ProcessCommand(edit)
+        msg = ch.ProcessCommand("edit")
         self.assertEqual(msg, ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
 
     def test_given_too_many_arguments__then_edits_fail(self):

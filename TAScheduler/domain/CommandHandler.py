@@ -187,11 +187,12 @@ class CommandHandler:
 
     def _DeleteUserHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or a Supervisor'
+            return 'Must be logged in as an Administrator or Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
-        a = Account.objects.get(act_email=cmd[0])
-        if not a:
+        try:
+            a = Account.objects.get(act_email=cmd[0])
+        except Exception:
             return 'Given email does not belong to an existing user'
         a.delete()
         return 'Deleted user %s' % cmd[0]
