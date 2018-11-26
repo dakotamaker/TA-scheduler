@@ -20,5 +20,5 @@ def index(request):
 def command(request):
     r = ch.ProcessCommand(request.POST.get('cmd'))
     template = loader.get_template('main/index.html')
-    context = {'out': r.replace('\n', '<br>')}
+    context = {'out': r}
     return HttpResponse(template.render(context, request))
