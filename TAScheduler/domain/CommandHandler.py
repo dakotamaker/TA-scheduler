@@ -19,7 +19,7 @@ class CommandHandler:
             return 'Badly formatted command'
 
         handler = {
-            'exit': self._ExitHandler,
+            'help': self._HelpHandler,
             'login': self._LoginHandler,
             'logout': self._LogoutHandler,
             'notify': self._NotifyHandler,
@@ -64,9 +64,8 @@ class CommandHandler:
         except Exception as e:
             return 'Handler error - %s' % e
 
-    def _ExitHandler(self, cmd: [str]):
-        print('Exiting...')
-        exit()
+    def _HelpHandler(self, cmd: [str]):
+        return 'this is the help\nmenu right here\nnew line'
 
     def _LoginHandler(self, cmd: [str]):
         if len(cmd) != 2:
@@ -93,7 +92,32 @@ class CommandHandler:
         return 'Logged out'
 
     def _EditHandler(self, cmd: [str]):
-        pass
+        if self.currentUser is None:
+            return ErrorMessages.NOT_LOGGED_IN
+        elif self.currentUser.RoleIn(Role.Supervisor) or self.currentUser.RoleIn(Role.Administrator):
+            if len(cmd) != 1 and len(cmd) != 3:
+                return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+            try:
+                a = Account.objects.get(act_email=self.currentUser.act_email if cmd[0] != 'user' else cmd[1])
+                attr = cmd[0] if cmd[0] != 'user' else cmd[2]
+            except Exception:
+                return "Given email does not belong to an existing user"
+            new_value = attr.split(":")
+            if len(new_value) != 2:
+                return 'To edit an account you need a semicolon'
+            a.__setattr__(new_value[0], new_value[1])
+            a.save()
+            return "Edit successful"
+        else:
+            if len(cmd) != 1:
+                return 'Only supervisors or admins can edit another user'
+            attr = cmd[0]
+            new_value = attr.split(":")
+            if len(new_value) != 2:
+                return 'To edit an account you need a semicolon'
+            self.currentUser.__setattr__(new_value[0], new_value[1])
+            self.currentUser.save()
+            return "Edit successful"
 
     def _NotifyHandler(self, cmd: [str]):
         if not self.currentUser or self.currentUser.RoleIn(Role.TA):
@@ -112,7 +136,7 @@ class CommandHandler:
     def _CreateUserHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
             return 'Must be logged in as an Administrator or Supervisor'
-        if len(cmd) != 6 or len(cmd) != 8:
+        if len(cmd) != 6 and len(cmd) != 8:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         acc = Account.objects.filter(act_email=cmd[0])
         if acc:
@@ -156,18 +180,37 @@ class CommandHandler:
         c.tas.add(a)
 
     def _AssignCourseInstructorHandler(self, cmd: [str]):
-        pass
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 2:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        try:
+            c = Course.objects.get(course_name=cmd[0])
+        except Exception:
+            return 'This course does not exist'
+        if c.instructor != None:
+            return 'This course already has an instructor'
+        try:
+            a = Account.objects.get(act_email=cmd[1])
+        except Exception:
+            return 'This user does not exist'
+        if a.role_id != 2:
+            return 'Assignee must be an instructor'
+        c.instructor = a
+        c.save()
+        return 'Instructor assigned to course'
 
     def _AssignLabHandler(self, cmd: [str]):
         return 'Assign lab:' + cmd
 
     def _DeleteUserHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or a Supervisor'
+            return 'Must be logged in as an Administrator or Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
-        a = Account.objects.get(act_email=cmd[0])
-        if not a:
+        try:
+            a = Account.objects.get(act_email=cmd[0])
+        except Exception:
             return 'Given email does not belong to an existing user'
         a.delete()
         return 'Deleted user %s' % cmd[0]
@@ -203,7 +246,22 @@ class CommandHandler:
             return 'Must be logged in as an Administrator or a Supervisor'
 
     def _ListTAsHandler(self, cmd: [str]):
-        return 'List TAs:' + cmd
+        if not self.currentUser:
+            return 'Must be logged in to access TA list.'
+        a = Account.objects.filter(role_id=Role.TA)
+        s = ""
+        for ta in a:
+            s += "\n" + ta.act_fname
+            s += " " + ta.act_lname + ": "
+            c = Course.objects.filter(tas__act_email=ta.act_email)
+            for course in c:
+                s += course.course_name + "\t"
+            l = Lab.objects.filter(ta__act_email=ta.act_email)
+            for lab in l:
+                s += lab.lab_name + "\t"
+
+
+        return 'List TAs: ' + s
 
     def _ListCoursesHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
