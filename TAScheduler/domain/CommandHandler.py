@@ -109,6 +109,8 @@ class CommandHandler:
             new_value = attr.split(":")
             if len(new_value) != 2:
                 return 'To edit an account you need a semicolon'
+            if not hasattr(a, new_value[0]):
+                return ErrorMessages.INVALID_ACCOUNT_ATTRIBUTE
             a.__setattr__(new_value[0], new_value[1])
             a.save()
             return "Edit successful"
@@ -119,6 +121,8 @@ class CommandHandler:
             new_value = attr.split(":")
             if len(new_value) != 2:
                 return 'To edit an account you need a semicolon'
+            if not hasattr(self.currentUser, new_value[0]):
+                return ErrorMessages.INVALID_ACCOUNT_ATTRIBUTE
             self.currentUser.__setattr__(new_value[0], new_value[1])
             self.currentUser.save()
             return "Edit successful"
@@ -127,8 +131,17 @@ class CommandHandler:
         if not self.currentUser or self.currentUser.RoleIn(Role.TA):
             return 'TAs cannot send notifications'
         elif self.currentUser.RoleIn(Role.Instructor):
-            # Logic to look for TA that is in the instructor's class, to implement later
-            return
+            c = Course.objects.filter(instructor=self.currentUser)
+            found: bool = False
+            if c:
+                for course in c:
+                    for ta in course.tas:
+                        if ta.act_email == cmd[0]:
+                            found = True
+                            break
+            if not found:
+                return 'No Ta with that email exists'
+
         if len(cmd) != 3:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         user = Account.objects.get(act_email=cmd[0])
@@ -258,7 +271,15 @@ class CommandHandler:
         return 'Deleted user %s' % cmd[0]
 
     def _DeleteCourseHandler(self, cmd: [str]):
-        return 'Delete course:' + cmd
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 1:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        c = Course.objects.filter(course_name=cmd[0]).first()
+        if not c:
+            return 'A course with that name does not exist'
+        c.delete()
+        return 'Delete course: ' + cmd[0]
 
     def _DeleteLabHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
