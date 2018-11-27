@@ -6,6 +6,29 @@ from ..domain.CommandHandler import CommandHandler
 from ..domain.ErrorMessages import ErrorMessages
 
 
+class UserAsAdministrator(TestCase):
+    def setUp(self):
+        self.ch = CommandHandler()
+        self.admin = Account.objects.create(act_email='super@email.com', role_id=3)
+        self.ta = Account.objects.create(act_email='ta1@ta.com', role_id=1)
+        self.ch.currentUser = self.admin
+
+    def test_creating_a_user_given_all_valid_arguments_then_user_is_created(self):
+        self.ch.ProcessCommand('create user new@test.com new user 0 1112223333 \"test st\" \"10-11\" \"EMS 123\"')
+        self.assertIsNotNone(Account.objects.filter(act_email='new@test.com').first())
+
+    def test_creating_a_user_given_user_already_exits_then_no_new_user_is_created(self):
+        msg = self.ch.ProcessCommand('create user ta1@ta.com new user 0 1112223333 \"test st\" \"10-11\" \"EMS 123\"')
+        self.assertEqual(msg, 'User already exists')
+
+    def test_creating_a_user_given_too_few_arguments_then_error_is_displayed(self):
+        msg = self.ch.ProcessCommand('create user new@test.com new test-user ta \"test st\"')
+        self.assertEqual(msg, ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+
+    def test_creating_a_user_given_too_many_arguments_then_error_is_displayed(self):
+        msg = self.ch.ProcessCommand('create user new@test.com new test-user ta 1112223333 \"test st\" too-many-arguments')
+        self.assertEqual(msg, ErrorMessages.INVALID_NUM_OF_ARGUMENTS)
+
 # create lab <course name> <lab name>
 class LabAsInvalidUser(TestCase):
     def setUp(self):
