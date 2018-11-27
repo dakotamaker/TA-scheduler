@@ -2,4 +2,5 @@
 class ErrorMessages:
     INVALID_NUM_OF_ARGUMENTS = 'Invalid number of arguments'
     NOT_LOGGED_IN = 'Must be logged in to perform this operation'
+    INVALID_ACCOUNT_ATTRIBUTE = 'Invalid Account attribute'
 

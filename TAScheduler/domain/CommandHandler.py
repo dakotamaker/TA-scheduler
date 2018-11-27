@@ -109,6 +109,8 @@ class CommandHandler:
             new_value = attr.split(":")
             if len(new_value) != 2:
                 return 'To edit an account you need a semicolon'
+            if not hasattr(a, new_value[0]):
+                return ErrorMessages.INVALID_ACCOUNT_ATTRIBUTE
             a.__setattr__(new_value[0], new_value[1])
             a.save()
             return "Edit successful"
@@ -119,6 +121,8 @@ class CommandHandler:
             new_value = attr.split(":")
             if len(new_value) != 2:
                 return 'To edit an account you need a semicolon'
+            if not hasattr(self.currentUser, new_value[0]):
+                return ErrorMessages.INVALID_ACCOUNT_ATTRIBUTE
             self.currentUser.__setattr__(new_value[0], new_value[1])
             self.currentUser.save()
             return "Edit successful"
