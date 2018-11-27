@@ -271,7 +271,15 @@ class CommandHandler:
         return 'Deleted user %s' % cmd[0]
 
     def _DeleteCourseHandler(self, cmd: [str]):
-        return 'Delete course:' + cmd
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Administrator or Supervisor'
+        if len(cmd) != 1:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        c = Course.objects.filter(course_name=cmd[0]).first()
+        if not c:
+            return 'A course with that name does not exist'
+        c.delete()
+        return 'Delete course: ' + cmd[0]
 
     def _DeleteLabHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
