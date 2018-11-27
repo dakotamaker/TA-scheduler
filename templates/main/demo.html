@@ -1,21 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>TA Scheduler</h1>
-<form onsubmit="event.preventDefault(); doSubmit();" autocomplete="off">
-    command: <input id="command" type="text" name="cmd" /><input type="submit" />
-</form>
-<div id="output"></div>
+<h1 id="heading">TA Scheduler</h1>
+<div id="console">
+    <div id="output"></div>
+    <form onsubmit="event.preventDefault(); doSubmit();" autocomplete="off">
+        <span class="dollar">$</span><input id="command" type="text" name="cmd" />
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     function doSubmit() {
-        cmd = document.querySelector('#command').value;
-        var f = fetch('/api?cmd=' + cmd).then(function(res) {
-            res.json().then(function(j) {
+        cmdE = document.querySelector('#command');
+        cmd = cmdE.value;
+        $(cmdE).prop('disabled', true);
+        var f = fetch('/api?cmd=' + cmd).then(function (res) {
+            res.json().then(function (j) {
+                cmdE.value = '';
+                r = j.response.replace(/\n/g, '<br>');
                 e = document.querySelector('#output');
-                e.innerHTML = j.response + '<br>' + e.innerHTML;
+                e.innerHTML = e.innerHTML + '<span class="in-cmd">' + (e.innerHTML.length != 0 ? '</span><br>' : '') + '<span class="dollar">$</span>' + cmd + '<br><span class="response">' + r + '</span>';
+                $('#console').scrollTop($('#console')[0].scrollHeight);
+                $(cmdE).prop('disabled', false);
+                $(cmdE).focus();
             });
         });
-        console.log('Submitted');
     }
+
+    $("input").keypress(function (event) {
+        if (event.which == 13) {
+            event.preventDefault();
+            $("form").submit();
+        }
+    });
+
+    $('#command').focus();
+
+    $('#command').focusout(function () {
+        $(this).focus();
+    });
 </script>
 
 {% endblock content %}
