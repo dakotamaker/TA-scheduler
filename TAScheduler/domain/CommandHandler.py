@@ -241,8 +241,8 @@ class CommandHandler:
         return 'Instructor assigned to course'
 
     def _AssignLabHandler(self, cmd: [str]):
-        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or Supervisor'
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
+            return 'Must be logged in as an Instructor, Administrator or Supervisor'
         if len(cmd) != 3:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         c = Course.objects.filter(course_name=cmd[0]).first()
