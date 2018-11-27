@@ -37,17 +37,15 @@ class ListTAsTestCase(TestCase):
         self.course2.tas.set([self.ta2, self.ta3])
         self.lab2 = Lab.objects.create(lab_id='2', lab_name='DataLab', course=self.course2, ta=self.ta2)
 
-
+        self.ch = CommandHandler()
 
 
     def test_without_valid_login__then_list_fails(self):
-        ch = CommandHandler()
-        msg = ch.ProcessCommand("list tas")
+        msg = self.ch.ProcessCommand("list tas")
         self.assertEqual(msg, 'Must be logged in to access TA list.')
 
     def test_with_loggedInUser__then_list_succeeds(self):
-        ch = CommandHandler()
-        ch.ProcessCommand("login ta1@email.com 1111")
-        msg = ch.ProcessCommand("list tas")
+        self.ch.ProcessCommand("login ta1@email.com 1111")
+        msg = self.ch.ProcessCommand("list tas")
         self.assertEqual(msg, 'List TAs: \nTA1 Student: Algorithms\tAlgoLab\t\nTA2 Student: Databases\tDataLab\t\nTA3 Student: Algorithms\tDatabases\t\nTA4 Student: ')
 
