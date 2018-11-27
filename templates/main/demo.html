@@ -12,12 +12,17 @@
     function doSubmit() {
         cmdE = document.querySelector('#command');
         cmd = cmdE.value;
+        e = document.querySelector('#output');
+        if (cmd == 'clear') {
+            e.innerHTML = '';
+            cmdE.value = '';
+            return;
+        }
         $(cmdE).prop('disabled', true);
         var f = fetch('/api?cmd=' + cmd).then(function (res) {
             res.json().then(function (j) {
                 cmdE.value = '';
                 r = j.response.replace(/\n/g, '<br>');
-                e = document.querySelector('#output');
                 e.innerHTML = e.innerHTML + '<span class="in-cmd">' + (e.innerHTML.length != 0 ? '</span><br>' : '') + '<span class="dollar">$</span>' + cmd + '<br><span class="response">' + r + '</span>';
                 $('#console').scrollTop($('#console')[0].scrollHeight);
                 $(cmdE).prop('disabled', false);
