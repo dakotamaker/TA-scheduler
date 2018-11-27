@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>TA Scheduler</h1>
+<form onsubmit="event.preventDefault(); doSubmit();" autocomplete="off">
+    command: <input id="command" type="text" name="cmd" /><input type="submit" />
+</form>
+<div id="output"></div>
+<script>
+    function doSubmit() {
+        cmd = document.querySelector('#command').value;
+        var f = fetch('/api?cmd=' + cmd).then(function(res) {
+            res.json().then(function(j) {
+                e = document.querySelector('#output');
+                e.innerHTML = j.response + '<br>' + e.innerHTML;
+            });
+        });
+        console.log('Submitted');
+    }
+</script>
+
+{% endblock content %}
