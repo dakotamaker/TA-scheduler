@@ -131,8 +131,17 @@ class CommandHandler:
         if not self.currentUser or self.currentUser.RoleIn(Role.TA):
             return 'TAs cannot send notifications'
         elif self.currentUser.RoleIn(Role.Instructor):
-            # Logic to look for TA that is in the instructor's class, to implement later
-            return
+            c = Course.objects.filter(instructor=self.currentUser)
+            found: bool = False
+            if c:
+                for course in c:
+                    for ta in course.tas:
+                        if ta.act_email == cmd[0]:
+                            found = True
+                            break
+            if not found:
+                return 'No Ta with that email exists'
+
         if len(cmd) != 3:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         user = Account.objects.get(act_email=cmd[0])
