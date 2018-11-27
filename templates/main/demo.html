@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 id="heading">TA Scheduler</h1>
-<div id="console">
-    <div id="output"></div>
-    <form onsubmit="event.preventDefault(); doSubmit();" autocomplete="off">
-        <span class="dollar">$</span><input id="command" type="text" name="cmd" />
-    </form>
+<div id="demo">
+    <h1 id="heading">TA Scheduler</h1>
+    <div id="console">
+        <div id="output"></div>
+        <form onsubmit="event.preventDefault(); doSubmit();" autocomplete="off">
+            <span class="dollar">$</span><input id="command" type="text" name="cmd" />
+        </form>
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>

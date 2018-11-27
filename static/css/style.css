@@ -7,15 +7,15 @@ input[type="text"] {
     margin-right: 5px;
 }
 
-* {
+#demo * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-family: Inconsolata, monospace;
 }
 
-body {
+#demo {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -23,11 +23,11 @@ body {
     color: #333;
 }
 
-h1#heading {
-    font-size: 1.5rem;
+#demo h1#heading {
+    font-size: 2rem;
 }
 
-div#console {
+#demo div#console {
     width: 1200px;
     height: 673px;
     background-color: #3a3a3a;
@@ -37,33 +37,33 @@ div#console {
     padding: 25px;
 }
 
-div#output {
+#demo div#output {
     overflow: hidden;
 }
 
-form {
+#demo form {
     width: 100%;
     display: flex;
 }
 
-span.dollar {
+#demo span.dollar {
     display: inline-block;
     margin-right: 5px;
 }
 
-span.response {
+#demo span.response {
     margin-bottom: 15px;
     display: inline-block;
 }
 
-input#command {
+#demo input#command {
     flex-grow: 1;
     border: none;
     background-color: rgba(0,0,0,0);
     color: #eee;
 }
 
-input#command:focus {
+#demo input#command:focus {
     box-shadow: none;
     outline: none;
 }
