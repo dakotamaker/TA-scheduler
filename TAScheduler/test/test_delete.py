@@ -37,10 +37,10 @@ class LabAsSupervisor(TestCase):
         Lab.objects.create(lab_name='lab2', course=self.c1)
         self.ch.currentUser = self.super
 
-    def test_course_dne__expect_error(self):
+    def test_course_does_not_exist__expect_error(self):
         r = self.ch.ProcessCommand('delete lab "dne" "lab2"')
         self.assertEquals('A course with that name does not exist', r)
-        self.assertIsNone(Lab.objects.filter(lab_name='lab2').first())
+        self.assertIsNone(Lab.objects.filter(lab_name='dne').first())
 
     def test_happy_path__expect_success(self):
         r = self.ch.ProcessCommand('delete lab "course1" "lab2"')
@@ -68,10 +68,10 @@ class LabAsAdministrator(TestCase):
         Lab.objects.create(lab_name='lab2', course=self.c1)
         self.ch.currentUser = self.admin
 
-    def test_course_dne__expect_error(self):
+    def test_course_does_not_exist__expect_error(self):
         r = self.ch.ProcessCommand('delete lab "dne" "lab2"')
         self.assertEquals('A course with that name does not exist', r)
-        self.assertIsNone(Lab.objects.filter(lab_name='lab2').first())
+        self.assertIsNone(Lab.objects.filter(lab_name='dne').first())
 
     def test_happy_path__expect_success(self):
         r = self.ch.ProcessCommand('delete lab "course1" "lab2"')

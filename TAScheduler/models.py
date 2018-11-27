@@ -18,7 +18,6 @@ class Account(models.Model):
     def RoleIn(self, *roles: [Role]) -> bool:
         return Role(self.role_id) in roles
 
-
 class Course(models.Model):
 
     course_id = models.AutoField(primary_key=True)

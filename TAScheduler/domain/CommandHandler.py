@@ -2,6 +2,7 @@ from ..models import *
 from .Role import Role
 from .ErrorMessages import ErrorMessages
 import shlex
+import os
 
 
 class CommandHandler:
@@ -66,7 +67,8 @@ class CommandHandler:
             return 'Handler error - %s' % e
 
     def _HelpHandler(self, cmd: [str]):
-        return 'this is the help\nmenu right here\nnew line'
+        file = os.getcwd() + '/docs/CommandManual.txt'
+        return open(file).read()
 
     def _LoginHandler(self, cmd: [str]):
         if len(cmd) != 2:
@@ -273,10 +275,14 @@ class CommandHandler:
         return 'Lab deleted'
 
     def _ViewUserHandler(self, cmd: [str]):
-        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or a Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+
+        if not self.currentUser:
+            return 'Must be logged in to view users'
+        if self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
+            return self.viewUserInfo(cmd[0])
+        return self.viewPublicUserInfo(cmd[0])
 
     def _ViewCourseHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
@@ -322,3 +328,27 @@ class CommandHandler:
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
                                                                Role.Supervisor):
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
+
+    def viewUserInfo(self, email: str):
+        acc = Account.objects.filter(act_email=email).first()
+        if acc is None:
+            return 'User does not exist'
+        info = 'Account email: ' + acc.act_email
+        info += '\nFirst name: ' + acc.act_fname
+        info += '\nLast name: ' + acc.act_lname
+        info += '\nPhone number: ' + acc.act_phone
+        info += '\nAddress: ' + acc.act_address
+        info += '\nOffice hours: ' + acc.act_officehours
+        info += '\nOffice Location: ' + acc.act_officelocation
+        return info
+
+    def viewPublicUserInfo(self, email: str):
+        acc = Account.objects.filter(act_email=email).first()
+        if acc is None:
+            return 'User does not exist'
+        info = 'Account email: ' + acc.act_email
+        info += '\nFirst name: ' + acc.act_fname
+        info += '\nLast name: ' + acc.act_lname
+        info += '\nOffice hours: ' + acc.act_officehours
+        info += '\nOffice Location: ' + acc.act_officelocation
+        return info
