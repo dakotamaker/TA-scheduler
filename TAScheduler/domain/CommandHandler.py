@@ -7,8 +7,9 @@ import os
 
 class CommandHandler:
 
-    def __init__(self):
-        self.currentUser = None
+    def __init__(self, currentUserEmail = None):
+        a = Account.objects.filter(act_email=currentUserEmail).first()
+        self.currentUser = a
         Account.objects.get_or_create(act_email='supervisor@email.com', act_fname='supervisor', act_lname='user',
                                       act_password='password', act_address='1234 Main St., Milwaukee, WI',
                                       act_phone='123-123-1234', role_id=4, act_officelocation="none",
@@ -279,7 +280,7 @@ class CommandHandler:
         if not c:
             return 'A course with that name does not exist'
         c.delete()
-        return 'Delete course: ' + cmd[0]
+        return 'Deleted course'
 
     def _DeleteLabHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):

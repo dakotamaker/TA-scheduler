@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>{{ page_title | default_if_none:'TA Scheduler' }}</h1>
-    <form method="post" action="">
-        {% csrf_token %}
-        command: <input type="text" name="cmd"/>
-        <input type="submit"/>
-    </form>
-    <br>
     <br>
     <div class="out">{{ out | linebreaks }}</div>
 {% endblock content %}
