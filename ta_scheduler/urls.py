@@ -20,8 +20,5 @@ import TAScheduler.views as views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('command', views.command, name='command'),
-    path('demo', views.demo, name='demo'),
-    path('api', views.api, name='api')
+    path('', views.Home.as_view(), name='index'),
 ]

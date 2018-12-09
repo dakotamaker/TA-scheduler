@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.views import View
 from django.views.decorators.http import require_http_methods
 from django.template import loader
 from .domain.CommandHandler import CommandHandler
@@ -25,12 +26,32 @@ def command(request):
 
 
 @require_http_methods(["GET"])
-def demo(request):
-    template = loader.get_template('main/demo.html')
-    return HttpResponse(template.render({}, request))
-
-
-@require_http_methods(["GET"])
 def api(request):
     r = ch.ProcessCommand(request.GET.get('cmd'))
     return JsonResponse({'response': r})
+
+class Home(View):
+
+    def get(self, req):
+        template = loader.get_template('main/index.html')
+        context = {}
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        pass
+
+class Login(View):
+
+    def get(self, req):
+        pass
+
+    def post(self, req):
+        pass
+
+class Logout(View):
+
+    def get(self, req):
+        pass
+
+    def post(self, req):
+        pass
