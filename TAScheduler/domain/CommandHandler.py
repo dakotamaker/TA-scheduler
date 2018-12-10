@@ -303,8 +303,8 @@ class CommandHandler:
         if not self.currentUser:
             return 'Must be logged in to view users'
         if self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return self.viewUserInfo(cmd[0])
-        return self.viewPublicUserInfo(cmd[0])
+            return self._viewUserInfo(cmd[0])
+        return self._viewPublicUserInfo(cmd[0])
 
     def _ViewCourseHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
@@ -312,6 +312,7 @@ class CommandHandler:
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
+        return self._viewCourse(cmd[0])
 
     def _ViewLabHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
@@ -319,10 +320,7 @@ class CommandHandler:
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
         if len(cmd) != 1:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
-
-    def _ListUsersHandler(self, cmd: [str]):
-        if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or a Supervisor'
+        return self._viewLab(cmd[0])
 
     def _ListTAsHandler(self, cmd: [str]):
         if not self.currentUser:
@@ -341,17 +339,7 @@ class CommandHandler:
 
         return 'List TAs: ' + s
 
-    def _ListCoursesHandler(self, cmd: [str]):
-        if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
-                                                               Role.Supervisor):
-            return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
-
-    def _ListLabsHandler(self, cmd: [str]):
-        if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
-                                                               Role.Supervisor):
-            return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
-
-    def viewUserInfo(self, email: str):
+    def _viewUserInfo(self, email: str):
         acc = Account.objects.filter(act_email=email).first()
         if acc is None:
             return 'User does not exist'
@@ -364,7 +352,7 @@ class CommandHandler:
         info += '\nOffice Location: ' + acc.act_officelocation
         return info
 
-    def viewPublicUserInfo(self, email: str):
+    def _viewPublicUserInfo(self, email: str):
         acc = Account.objects.filter(act_email=email).first()
         if acc is None:
             return 'User does not exist'
@@ -373,4 +361,33 @@ class CommandHandler:
         info += '\nLast name: ' + acc.act_lname
         info += '\nOffice hours: ' + acc.act_officehours
         info += '\nOffice Location: ' + acc.act_officelocation
+        return info
+
+    def _viewCourse(self, course_id: str):
+        course = Course.objects.filter(lab_id=course_id).first()
+        if course is None:
+            return 'Lab does not exist'
+        info = "Course name: " + course.course_id
+        info += "\nInstructor: " + course.instructor
+        info += "\nTAs: " + self._listTas(course.tas)
+        return info
+
+    def _listTas(self, tas: [str]):
+        result = ''
+        index = 0
+        while index < len(tas):
+            if index + 1 == len(tas):
+                result += tas[index] + '.'
+            else:
+                result += tas[index] + ', '
+            index += 1
+        return result
+
+    def _viewLab(self, lab_id: str):
+        lab = Lab.objects.filter(lab_id=lab_id).first()
+        if lab is None:
+            return 'Lab does not exist'
+        info = "Lab name: " + lab.lab_name
+        info += "\nCourse: " + lab.course
+        info += "\nTA: " + lab.ta
         return info
