@@ -50,10 +50,7 @@ class CommandHandler:
                 'lab': self._ViewLabHandler
             },
             'list': {
-                'users': self._ListUsersHandler,
                 'tas': self._ListTAsHandler,
-                'courses': self._ListCoursesHandler,
-                'labs': self._ListLabsHandler
             }
         }
         while type(handler) is dict:
@@ -90,6 +87,8 @@ class CommandHandler:
             return 'Logged in as %s, your new password has been saved' % cmd[0]
 
     def _LogoutHandler(self, cmd: [str]):
+        if len(cmd) != 0:
+            return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         if not self.currentUser:
             return 'No user is logged in'
         self.currentUser = None
@@ -132,24 +131,27 @@ class CommandHandler:
         if not self.currentUser or self.currentUser.RoleIn(Role.TA):
             return 'TAs cannot send notifications'
         elif self.currentUser.RoleIn(Role.Instructor):
-            c = Course.objects.filter(instructor=self.currentUser)
+            c = Course.objects.filter(instructor=self.currentUser).all()
+            i = 0
             found: bool = False
-            if c:
-                for course in c:
-                    for ta in course.tas:
-                        if ta.act_email == cmd[0]:
-                            found = True
-                            break
+            while found is False and i < len(c):
+                tas = c[i].tas.all()
+                j = 0
+                while j < len(tas):
+                    if tas[j].act_email == cmd[0]:
+                        found = True
+                    j += 1
+                i += 1
             if not found:
-                return 'No Ta with that email exists'
+                return 'This user either does not exist, is not a TA, or is not a TA assigned to one of your courses'
 
         if len(cmd) != 3:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
-        user = Account.objects.get(act_email=cmd[0])
-        if user:
-            return 'Notification email sent to %s!' % user.act_email
-        else:
+
+        user = Account.objects.filter(act_email=cmd[0]).first()
+        if user is None:
             return 'This user does not exist'
+        return 'Notification email sent to %s!' % user.act_email
 
     def _CreateUserHandler(self, cmd: [str]):
         if not self.currentUser or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
@@ -318,9 +320,9 @@ class CommandHandler:
         if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator,
                                                                Role.Supervisor):
             return 'Must be logged in as an Instructor, Administrator, or a Supervisor'
-        if len(cmd) != 1:
+        if len(cmd) != 2:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
-        return self._viewLab(cmd[0])
+        return self._viewLab(cmd[0], cmd[1])
 
     def _ListTAsHandler(self, cmd: [str]):
         if not self.currentUser:
@@ -363,31 +365,34 @@ class CommandHandler:
         info += '\nOffice Location: ' + acc.act_officelocation
         return info
 
-    def _viewCourse(self, course_id: str):
-        course = Course.objects.filter(lab_id=course_id).first()
+    def _viewCourse(self, course_name: str):
+        course = Course.objects.filter(course_name=course_name).first()
         if course is None:
-            return 'Lab does not exist'
-        info = "Course name: " + course.course_id
-        info += "\nInstructor: " + course.instructor
-        info += "\nTAs: " + self._listTas(course.tas)
+            return 'Course does not exist'
+        info = "Course name: " + course.course_name
+        info += "\nInstructor: " + course.instructor.act_email
+        info += "\nTAs: " + self._listTas(course.tas.all())
         return info
 
-    def _listTas(self, tas: [str]):
+    def _listTas(self, tas: [Account]):
         result = ''
         index = 0
         while index < len(tas):
             if index + 1 == len(tas):
-                result += tas[index] + '.'
+                result += tas[index].act_email + '.'
             else:
-                result += tas[index] + ', '
+                result += tas[index].act_email + ', '
             index += 1
         return result
 
-    def _viewLab(self, lab_id: str):
-        lab = Lab.objects.filter(lab_id=lab_id).first()
+    def _viewLab(self, course_name: str, lab_name: str):
+        course = Course.objects.filter(course_name=course_name).first()
+        if course is None:
+            return 'Course does not exist'
+        lab = Lab.objects.filter(lab_name=lab_name, course=course).first()
         if lab is None:
             return 'Lab does not exist'
         info = "Lab name: " + lab.lab_name
-        info += "\nCourse: " + lab.course
-        info += "\nTA: " + lab.ta
+        info += "\nCourse: " + lab.course.course_name
+        info += "\nTA: " + lab.ta.act_email
         return info
