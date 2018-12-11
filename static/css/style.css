@@ -1,70 +1,13 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     background: #efefef;
-    overflow: hidden;
 }
 
-input[type="text"] {
-    width: 600px;
-    margin-right: 5px;
-}
-
-#demo * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-size: 1.5rem;
-    font-family: Inconsolata, monospace;
-}
-
-#demo {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 100vh;
-    color: #333;
-}
-
-#demo h1#heading {
-    font-size: 2rem;
-}
-
-#demo div#console {
-    width: 60%;
-    height: 60%;
-    background-color: #3a3a3a;
-    text-shadow: 0 0 5px #C8C8C8;
-    color: #eee;
-    overflow-y: scroll;
-    padding: 25px;
-}
-
-#demo div#output {
-    overflow: hidden;
-}
-
-#demo form {
-    width: 100%;
-    display: flex;
-}
-
-#demo span.dollar {
-    display: inline-block;
-    margin-right: 5px;
-}
-
-#demo span.response {
+input {
+    display: block;
+    width: 40%;
     margin-bottom: 15px;
-    display: inline-block;
-}
-
-#demo input#command {
-    flex-grow: 1;
-    border: none;
-    background-color: rgba(0,0,0,0);
-    color: #eee;
-}
-
-#demo input#command:focus {
-    box-shadow: none;
-    outline: none;
 }

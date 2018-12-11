@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ page_title }}</h1>
+    {{ form.non_field_errors }}
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit"/>
+    </form>
+    <br>
+    <br>
+    <div class="out">{{ out | linebreaks }}</div>
+{% endblock content %}

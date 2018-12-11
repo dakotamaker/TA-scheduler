@@ -14,14 +14,10 @@ class LabAsInvalidUser(TestCase):
         self.c1 = Course.objects.create(course_name='course1')
         Lab.objects.create(lab_name='lab1', course=self.c1)
 
-    def test_not_logged_in__then_expect_error(self):
-        r = self.ch.ProcessCommand('assign lab "course1" "lab1" email@email.com')
-        self.assertEquals('Must be logged in as an Administrator or Supervisor', r)
-
     def test_logged_in_not_supervisor_or_administrator__expect_error(self):
         self.ch.currentUser = self.ta
         r = self.ch.ProcessCommand('assign lab "course1" "lab1" email@email.com')
-        self.assertEquals('Must be logged in as an Administrator or Supervisor', r)
+        self.assertEquals('Must be logged in as an Instructor, Administrator or Supervisor', r)
 
 
 # assign lab <course name> <lab name> <ta email>
@@ -117,10 +113,6 @@ class CourseTaAsInvalidUser(TestCase):
         self.ta = Account.objects.create(act_email='ta@email.com', role_id=1)
         self.c1 = Course.objects.create(course_name='course1')
         Lab.objects.create(lab_name='lab1', course=self.c1)
-
-    def test_not_logged_in__then_expect_error(self):
-        r = self.ch.ProcessCommand('assign course ta course1 ta@email.com')
-        self.assertEquals('Must be logged in as an Administrator or Supervisor', r)
 
     def test_logged_in_not_supervisor_or_administrator__expect_error(self):
         self.ch.currentUser = self.ta
