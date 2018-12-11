@@ -8,6 +8,7 @@ from TAScheduler.forms.UserInfoForm import UserInfoForm
 from .domain.CommandHandler import CommandHandler
 from TAScheduler.forms.CourseNameForm import CourseNameForm
 from TAScheduler.forms.LoginForm import LoginForm
+from TAScheduler.models import Account
 
 # Create your views here.
 
@@ -58,13 +59,15 @@ class Login(View):
                 template = loader.get_template('main/index.html')
                 context = {'page_title': 'Home', 'out': out}
                 req.session['current_user'] = form.cleaned_data['email']
+                a = Account.objects.filter(act_email=form.cleaned_data['email']).first()
+                req.session['current_role'] = a.role_id
             else:
                 template = loader.get_template('main/form.html')
-                context = {'page_title': 'Login', 'out': out, 'form': LoginForm()}
+                context = {'page_title': 'Login', 'out': out, 'form': form}
             return HttpResponse(template.render(context, req))
         else:
             template = loader.get_template('main/form.html')
-            context = {'page_title': 'Login', 'form': LoginForm()}
+            context = {'page_title': 'Login', 'form': form}
             return HttpResponse(template.render(context, req))
 
 class Logout(View):
