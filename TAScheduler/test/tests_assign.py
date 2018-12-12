@@ -141,10 +141,10 @@ class CourseTaAsInvalidUser(TestCase):
 
     def test_logged_in_not_supervisor_or_instructor__expect_error(self):
         self.ch.currentUser = self.ta
-        r = self.ch.ProcessCommand('assign lab "course1" "lab1" email@email.com')
+        r = self.ch.ProcessCommand('assign course ta "course1" email@email.com')
         self.assertEquals('Must be logged in as an Instructor or Supervisor', r)
         self.ch.currentUser = self.admin
-        r = self.ch.ProcessCommand('assign lab "course1" "lab1" email@email.com')
+        r = self.ch.ProcessCommand('assign course ta "course1" email@email.com')
         self.assertEquals('Must be logged in as an Instructor or Supervisor', r)
 
 

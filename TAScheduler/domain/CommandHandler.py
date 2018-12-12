@@ -210,7 +210,7 @@ class CommandHandler:
 
     def _AssignCourseTAHandler(self, cmd: [str]):
         if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Supervisor):
-            return 'Must be logged in as an Administrator or Supervisor'
+            return 'Must be logged in as an Instructor or Supervisor'
         if len(cmd) != 2:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         c = Course.objects.filter(course_name=cmd[0]).first()
