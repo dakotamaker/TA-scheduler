@@ -209,13 +209,15 @@ class CommandHandler:
         return 'Lab created'
 
     def _AssignCourseTAHandler(self, cmd: [str]):
-        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or Supervisor'
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Instructor, Role.Supervisor):
+            return 'Must be logged in as an Instructor or Supervisor'
         if len(cmd) != 2:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         c = Course.objects.filter(course_name=cmd[0]).first()
         if not c:
             return 'A course with that name does not exist'
+        if self.currentUser.RoleIn(Role.Instructor) and (c.instructor.act_email != self.currentUser.act_email):
+            return 'Instructors can only assign TAs to their own courses.'
         a = Account.objects.filter(act_email=cmd[1]).first()
         if not a or not a.RoleIn(Role.TA):
             return 'Only existing TAs can be assigned to the course'
@@ -223,14 +225,14 @@ class CommandHandler:
         return 'TA assigned to course'
 
     def _AssignCourseInstructorHandler(self, cmd: [str]):
-        if self.currentUser is None or not self.currentUser.RoleIn(Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Administrator or Supervisor'
+        if self.currentUser is None or not self.currentUser.RoleIn(Role.Supervisor):
+            return 'Must be logged in as a Supervisor'
         if len(cmd) != 2:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         try:
             c = Course.objects.get(course_name=cmd[0])
         except Exception:
-            return 'This course does not exist'
+            return 'A course with that name does not exist'
         if c.instructor != None:
             return 'This course already has an instructor'
         try:
@@ -244,16 +246,20 @@ class CommandHandler:
         return 'Instructor assigned to course'
 
     def _AssignLabHandler(self, cmd: [str]):
-        if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Administrator, Role.Supervisor):
-            return 'Must be logged in as an Instructor, Administrator or Supervisor'
+        if not self.currentUser or not self.currentUser.RoleIn(Role.Instructor, Role.Supervisor):
+            return 'Must be logged in as an Instructor or Supervisor'
         if len(cmd) != 3:
             return ErrorMessages.INVALID_NUM_OF_ARGUMENTS
         c = Course.objects.filter(course_name=cmd[0]).first()
         if not c:
             return 'A course with that name does not exist'
+        if self.currentUser.RoleIn(Role.Instructor) and (c.instructor.act_email != self.currentUser.act_email):
+            return 'Instructors can only assign TAs to their own courses.'
         l = Lab.objects.filter(lab_name=cmd[1], course=c).first()
         if not l:
             return 'Lab for that course does not exist'
+        if l.ta != None:
+            return 'This course already has a TA'
         a = c.tas.filter(act_email=cmd[2]).first()
         if not a:
             return 'Only TAs assigned to the course can be assigned to the lab'
