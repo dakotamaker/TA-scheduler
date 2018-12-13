@@ -25,5 +25,11 @@ urlpatterns = [
     path('logout', views.Logout.as_view()),
     path('create-course', views.CreateCourse.as_view()),
     path('delete-course', views.DeleteCourse.as_view()),
-    path('create-user', views.CreateUser.as_view())
+    path('create-user', views.CreateUser.as_view()),
+    path('delete-user', views.DeleteUser.as_view()),
+    path('create-lab', views.CreateLab.as_view()),
+    path('delete-lab', views.CreateLab.as_view()),
+    path('assign-course-ta', views.AssignCourseTA.as_view()),
+    path('assign-course-instructor', views.AssignCourseInstructor.as_view()),
+    path('assign-lab', views.AssignLab.as_view())
 ]
