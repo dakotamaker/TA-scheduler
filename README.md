@@ -17,4 +17,4 @@ A command manual has been created for the time being as this is currently just a
 To run the CLI locally, run `python run.py` from the root directory
 
 # Testing locally
-To run the tests, run `python test_runner.py` from the root directory
+To run the tests, run `python manage.py test` from the root directory

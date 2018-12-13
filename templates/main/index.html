@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ page_title | default_if_none:'TA Scheduler' }}</h1>
+    <br>
+    <div class="out">{{ out | linebreaks }}</div>
+{% endblock content %}

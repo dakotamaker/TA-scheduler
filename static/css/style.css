@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #efefef;
+}
+
+input {
+    display: block;
+    width: 40%;
+    margin-bottom: 15px;
+}

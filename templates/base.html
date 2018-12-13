@@ -1,0 +1,28 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title | add:' - TA Scheduler' | default_if_none:'TA Scheduler' }}</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="{% static "/css/style.css" %}">
+</head>
+<body>
+    {% if request.session.current_user %}
+        <div>
+            <span>Logged in as: {{ request.session.current_user }}</span>
+            <form action="/logout" method="POST">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    {% else %}
+        <div>
+            <a href="/login">Login</a>
+        </div>
+    {% endif %}
+    {% block content %}{% endblock content %}
+</body>
+</html>
