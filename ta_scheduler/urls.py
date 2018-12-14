@@ -36,4 +36,7 @@ urlpatterns = [
     path('edit', views.Edit.as_view()),
     path('edit-user', views.EditUser.as_view()),
     path('list-tas', views.ListTAs.as_view()),
+    path('view-user', views.ViewUser.as_view()),
+    path('view-course', views.ViewCourse.as_view()),
+    path('view-lab', views.ViewLab.as_view())
 ]

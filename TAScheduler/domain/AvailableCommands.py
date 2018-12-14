@@ -17,7 +17,9 @@ class AvailableCommands:
         self.addAvailableCommand([Role.Administrator, Role.Supervisor], "Edit User Information", "edit-user")
         self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor,Role.TA], "Edit Information", "edit")
         self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor, Role.TA], "List TAs", "list-tas")
-
+        self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor, Role.TA], "View User","view-user")
+        self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor], "View Course","view-course")
+        self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor], "View Lab", "view-lab")
 
     def addAvailableCommand(self, cmd_role: Role, cmd_txt, cmd_url):
         if isinstance(cmd_role, list):

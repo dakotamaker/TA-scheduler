@@ -12,6 +12,9 @@ from TAScheduler.forms.UserInfoForm import UserInfoForm
 from TAScheduler.forms.NotifyForm import NotifyForm
 from TAScheduler.forms.EditUserForm import EditUserForm
 from TAScheduler.forms.EditForm import EditForm
+from TAScheduler.forms.ViewCourseForm import ViewCourseForm
+from TAScheduler.forms.ViewLabForm import ViewLabForm
+from TAScheduler.forms.ViewUserForm import ViewUserForm
 from .domain.CommandHandler import CommandHandler
 from .domain.Role import Role
 from TAScheduler.forms.CourseNameForm import CourseNameForm
@@ -360,3 +363,37 @@ class ListTAs(View):
         context['out'] = ch.ProcessCommand(
             f'list tas')
         return HttpResponse(template.render(context, req))
+
+class ViewUser(View):
+    def get(self, req):
+        template = loader.get_template('main/form.html')
+        context = {'page_title': 'View User', 'form': ViewUserForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        ##todo
+        pass
+
+class ViewCourse(View):
+    def get(self, req):
+        template = loader.get_template('main/form.html')
+        context = {'page_title': 'View Course', 'form': ViewCourseForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        ##todo
+        pass
+
+class ViewLab(View):
+    def get(self, req):
+        template = loader.get_template('main/form.html')
+        context = {'page_title': 'View Lab', 'form': ViewLabForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        ##todo
+        pass
+
