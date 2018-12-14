@@ -58,11 +58,14 @@
             <div class='navigation'>
                 <ul class='nav nav-stacked'>
                     <!-- TODO: Create a list of available commands. loop and list them here in li tags. class='active' if the current page is that list item-->
-                    <li class=''>
-                        <a href='/create-course'>
-                            <i class='icon-plus' style='color:#60ADE9'></i><span>Create Course</span>
-                        </a>
-                    </li>
+                    {% for cmd in cmds %}
+                        <li class=''>
+                            <a href='/{{ cmd.cmd_url }}'>
+                                <i class='icon-plus' style='color:#60ADE9'></i><span>{{ cmd.cmd_txt }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+
                 </ul>
             </div>
         </nav>

@@ -14,11 +14,12 @@ from .domain.Role import Role
 from TAScheduler.forms.CourseNameForm import CourseNameForm
 from TAScheduler.forms.LoginForm import LoginForm
 from TAScheduler.models import Account
+from TAScheduler.domain.AvailableCommands import AvailableCommands
 
 # Create your views here.
 
 ch = CommandHandler()
-
+avcmd = AvailableCommands()
 
 @require_http_methods(["GET"])
 def index(request):
@@ -45,6 +46,7 @@ class Home(View):
     def get(self, req):
         template = loader.get_template('main/index.html')
         context = {'page_title': 'Home'}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
 class Login(View):
@@ -52,6 +54,7 @@ class Login(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Login', 'form': LoginForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     # this function is so gross because of the extra cases for logging in vs normal commands
@@ -69,10 +72,12 @@ class Login(View):
             else:
                 template = loader.get_template('main/form.html')
                 context = {'page_title': 'Login', 'out': out, 'form': form}
+            context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
             return HttpResponse(template.render(context, req))
         else:
             template = loader.get_template('main/form.html')
             context = {'page_title': 'Login', 'form': form}
+            context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
             return HttpResponse(template.render(context, req))
 
 class Logout(View):
@@ -85,6 +90,8 @@ class Logout(View):
             out = 'You must be logged in to log out'
         context = {'page_title': 'Home', 'out': out}
         req.session['current_user'] = None
+        req.session['current_role'] = None
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
 class CreateCourse(View):
@@ -92,6 +99,7 @@ class CreateCourse(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Create Course', 'form': CourseNameForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -103,6 +111,7 @@ class CreateCourse(View):
             context['form'] = CourseNameForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -111,6 +120,7 @@ class DeleteCourse(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Delete Course'}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -122,6 +132,7 @@ class DeleteCourse(View):
             context['form'] = CourseNameForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -130,6 +141,7 @@ class CreateUser(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Create User', 'form': UserInfoForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -141,6 +153,7 @@ class CreateUser(View):
             context['form'] = UserInfoForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -149,6 +162,7 @@ class DeleteUser(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Delete User', 'form': UserEmailForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -160,6 +174,7 @@ class DeleteUser(View):
             context['form'] = UserEmailForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -168,6 +183,7 @@ class CreateLab(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Create Lab', 'form': LabForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -179,6 +195,7 @@ class CreateLab(View):
             context['form'] = LabForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -187,6 +204,7 @@ class DeleteLab(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Delete Lab', 'form': LabForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -198,6 +216,7 @@ class DeleteLab(View):
             context['form'] = LabForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -206,6 +225,7 @@ class AssignCourseTA(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Assign Course TA', 'form': CourseEmailForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -217,6 +237,7 @@ class AssignCourseTA(View):
             context['form'] = CourseEmailForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -225,6 +246,7 @@ class AssignCourseInstructor(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Assign Course Instructor', 'form': CourseEmailForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -236,6 +258,7 @@ class AssignCourseInstructor(View):
             context['form'] = CourseEmailForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
 
@@ -244,6 +267,7 @@ class AssignLab(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Assign Lab', 'form': AssignLabForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
@@ -255,5 +279,6 @@ class AssignLab(View):
             context['form'] = AssignLabForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
