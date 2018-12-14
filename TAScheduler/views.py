@@ -46,7 +46,12 @@ class Home(View):
     def get(self, req):
         template = loader.get_template('main/index.html')
         context = {'page_title': 'Home'}
-        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+
+        if 'current_role' in req.session:
+            context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        else:
+            context['cmds'] = []
+
         return HttpResponse(template.render(context, req))
 
 class Login(View):
@@ -54,7 +59,12 @@ class Login(View):
     def get(self, req):
         template = loader.get_template('main/form.html')
         context = {'page_title': 'Login', 'form': LoginForm()}
-        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+
+        if 'current_role' in req.session:
+            context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        else:
+            context['cmds'] = []
+
         return HttpResponse(template.render(context, req))
 
     # this function is so gross because of the extra cases for logging in vs normal commands
@@ -72,12 +82,22 @@ class Login(View):
             else:
                 template = loader.get_template('main/form.html')
                 context = {'page_title': 'Login', 'out': out, 'form': form}
-            context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+
+            if 'current_role' in req.session:
+                context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+            else:
+                context['cmds'] = []
+
             return HttpResponse(template.render(context, req))
         else:
             template = loader.get_template('main/form.html')
             context = {'page_title': 'Login', 'form': form}
-            context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+
+            if 'current_role' in req.session:
+                context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+            else:
+                context['cmds'] = []
+
             return HttpResponse(template.render(context, req))
 
 class Logout(View):
