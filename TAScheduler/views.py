@@ -10,6 +10,8 @@ from TAScheduler.forms.LabForm import LabForm
 from TAScheduler.forms.UserEmailForm import UserEmailForm
 from TAScheduler.forms.UserInfoForm import UserInfoForm
 from TAScheduler.forms.NotifyForm import NotifyForm
+from TAScheduler.forms.EditUserForm import EditUserForm
+from TAScheduler.forms.EditForm import EditForm
 from .domain.CommandHandler import CommandHandler
 from .domain.Role import Role
 from TAScheduler.forms.CourseNameForm import CourseNameForm
@@ -326,3 +328,25 @@ class Notify(View):
         context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))
+
+class Edit(View):
+    def get(self, req):
+        template = loader.get_template('main/form.html')
+        context = {'page_title': 'Edit Information', 'form': EditForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        ##update only fields that have entries
+        pass
+
+class EditUser(View):
+    def get(self, req):
+        template = loader.get_template('main/form.html')
+        context = {'page_title': 'Edit User Information', 'form': EditUserForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        ##update only fields that have entries
+        pass

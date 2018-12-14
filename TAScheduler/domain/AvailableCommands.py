@@ -14,6 +14,8 @@ class AvailableCommands:
         self.addAvailableCommand(Role.Supervisor, "Assign Course Instructor", "assign-course-instructor")
         self.addAvailableCommand([Role.Instructor, Role.Supervisor], "Assign Lab", "assign-lab")
         self.addAvailableCommand([Role.Administrator, Role.Instructor, Role.Supervisor], "Notify", "notify")
+        self.addAvailableCommand([Role.Administrator, Role.Supervisor], "Edit User Information", "edit-user")
+        self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor,Role.TA], "Edit Information", "edit")
 
 
     def addAvailableCommand(self, cmd_role: Role, cmd_txt, cmd_url):
