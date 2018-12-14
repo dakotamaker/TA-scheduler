@@ -372,8 +372,19 @@ class ViewUser(View):
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
-        ##todo
-        pass
+        form = ViewUserForm(req.POST)
+        context = {'page_title': 'View User'}
+        if form.is_valid():
+            ch = CommandHandler(req.session['current_user'])
+            context['out'] = ch.ProcessCommand(
+                f'view user "{form.cleaned_data["email"]}"')
+            context['form'] = ViewUserForm()
+        else:
+            context['form'] = form
+
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        template = loader.get_template('main/form.html')
+        return HttpResponse(template.render(context, req))
 
 class ViewCourse(View):
     def get(self, req):
@@ -383,8 +394,19 @@ class ViewCourse(View):
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
-        ##todo
-        pass
+        form = ViewCourseForm(req.POST)
+        context = {'page_title': 'View Course'}
+        if form.is_valid():
+            ch = CommandHandler(req.session['current_user'])
+            context['out'] = ch.ProcessCommand(
+                f'view course "{form.cleaned_data["course"]}"')
+            context['form'] = ViewCourseForm()
+        else:
+            context['form'] = form
+
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        template = loader.get_template('main/form.html')
+        return HttpResponse(template.render(context, req))
 
 class ViewLab(View):
     def get(self, req):
@@ -394,6 +416,17 @@ class ViewLab(View):
         return HttpResponse(template.render(context, req))
 
     def post(self, req):
-        ##todo
-        pass
+        form = ViewLabForm(req.POST)
+        context = {'page_title': 'View Lab'}
+        if form.is_valid():
+            ch = CommandHandler(req.session['current_user'])
+            context['out'] = ch.ProcessCommand(
+                f'view lab "{form.cleaned_data["course"]}" "{form.cleaned_data["lab"]}"')
+            context['form'] = ViewLabForm()
+        else:
+            context['form'] = form
+
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        template = loader.get_template('main/form.html')
+        return HttpResponse(template.render(context, req))
 
