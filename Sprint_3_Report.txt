@@ -1,0 +1,7 @@
+### This documents changes added to https://docs.google.com/document/d/12aK5XhEjSeCYmpnbjWdOgNtD0qNp2FTesZAKLgUGU9E/edit
+### Our Sprint 3 Final report
+
+
+Page: Test analysis
+
+There are no current failures with our tests. What needs to be done to fix problems? We may be missing tests since our web implementation is not 100% completed. 
