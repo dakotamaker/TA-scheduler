@@ -15,7 +15,7 @@ class AvailableCommands:
         self.addAvailableCommand([Role.Instructor, Role.Supervisor], "Assign Lab", "assign-lab")
         self.addAvailableCommand([Role.Administrator, Role.Instructor, Role.Supervisor], "Notify", "notify")
         self.addAvailableCommand([Role.Administrator, Role.Supervisor], "Edit User Information", "edit-user")
-        self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor,Role.TA], "Edit Information", "edit")
+        self.addAvailableCommand([Role.Instructor,Role.TA], "Edit Information", "edit")
         self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor, Role.TA], "List TAs", "list-tas")
         self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor, Role.TA], "View User","view-user")
         self.addAvailableCommand([Role.Administrator, Role.Supervisor, Role.Instructor], "View Course","view-course")

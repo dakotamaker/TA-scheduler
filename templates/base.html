@@ -74,6 +74,8 @@
     {% if request.session.current_user %}
         <section id='content'>
             <div class='container col-xs-12 col-sm-12 col-md-10 col-lg-7'>
+    {% else %}
+        <div class='container col-xs-12 col-sm-12 col-md-10 col-lg-7'>
     {% endif %}
 
     {% block content %}{% endblock content %}
@@ -81,6 +83,8 @@
     {% if request.session.current_user %}
             </div>
         </section>
+    {% else %}
+        </div>
     {% endif %}
      </div>
 </body>
