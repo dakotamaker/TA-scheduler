@@ -57,7 +57,6 @@
         <nav id='main-nav'>
             <div class='navigation'>
                 <ul class='nav nav-stacked'>
-                    <!-- TODO: Create a list of available commands. loop and list them here in li tags. class='active' if the current page is that list item-->
                     {% for cmd in cmds %}
                         <li class=''>
                             <a href='/{{ cmd.cmd_url }}'>
@@ -74,7 +73,7 @@
     {% endif %}
     {% if request.session.current_user %}
         <section id='content'>
-            <div class='container'>
+            <div class='container col-xs-12 col-sm-12 col-md-10 col-lg-7'>
     {% endif %}
 
     {% block content %}{% endblock content %}

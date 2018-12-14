@@ -9,6 +9,7 @@ from TAScheduler.forms.CourseEmailForm import CourseEmailForm
 from TAScheduler.forms.LabForm import LabForm
 from TAScheduler.forms.UserEmailForm import UserEmailForm
 from TAScheduler.forms.UserInfoForm import UserInfoForm
+from TAScheduler.forms.NotifyForm import NotifyForm
 from .domain.CommandHandler import CommandHandler
 from .domain.Role import Role
 from TAScheduler.forms.CourseNameForm import CourseNameForm
@@ -299,6 +300,29 @@ class AssignLab(View):
             context['form'] = AssignLabForm()
         else:
             context['form'] = form
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        template = loader.get_template('main/form.html')
+        return HttpResponse(template.render(context, req))
+
+class Notify(View):
+
+    def get(self, req):
+        template = loader.get_template('main/form.html')
+        context = {'page_title': 'Notify', 'form': NotifyForm()}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        return HttpResponse(template.render(context, req))
+
+    def post(self, req):
+        form = NotifyForm(req.POST)
+        context = {'page_title': 'Notify'}
+        if form.is_valid():
+            ch = CommandHandler(req.session['current_user'])
+            context['out'] = ch.ProcessCommand(
+                f'notify "{form.cleaned_data["email"]}" "{form.cleaned_data["subject"]}" "{form.cleaned_data["body"]}"')
+            context['form'] = NotifyForm()
+        else:
+            context['form'] = form
+
         context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         template = loader.get_template('main/form.html')
         return HttpResponse(template.render(context, req))

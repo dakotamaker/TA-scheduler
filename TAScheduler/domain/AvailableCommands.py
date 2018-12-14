@@ -1,5 +1,6 @@
 from .Role import Role
 
+##This class is to define the available commands to a user role
 class AvailableCommands:
     def __init__(self):
         self.commandList = []
@@ -12,7 +13,7 @@ class AvailableCommands:
         self.addAvailableCommand([Role.Instructor, Role.Supervisor], "Assign Course TA", "assign-course-ta")
         self.addAvailableCommand(Role.Supervisor, "Assign Course Instructor", "assign-course-instructor")
         self.addAvailableCommand([Role.Instructor, Role.Supervisor], "Assign Lab", "assign-lab")
-
+        self.addAvailableCommand([Role.Administrator, Role.Instructor, Role.Supervisor], "Notify", "notify")
 
 
     def addAvailableCommand(self, cmd_role: Role, cmd_txt, cmd_url):
