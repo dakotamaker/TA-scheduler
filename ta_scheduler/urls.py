@@ -34,5 +34,6 @@ urlpatterns = [
     path('assign-lab', views.AssignLab.as_view()),
     path('notify', views.Notify.as_view()),
     path('edit', views.Edit.as_view()),
-    path('edit-user', views.EditUser.as_view())
+    path('edit-user', views.EditUser.as_view()),
+    path('list-tas', views.ListTAs.as_view()),
 ]

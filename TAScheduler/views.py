@@ -350,3 +350,13 @@ class EditUser(View):
     def post(self, req):
         ##update only fields that have entries
         pass
+
+class ListTAs(View):
+    def get(self, req):
+        template = loader.get_template('main/index.html')
+        context = {'page_title': 'List TAs', 'form': ""}
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        ch = CommandHandler(req.session['current_user'])
+        context['out'] = ch.ProcessCommand(
+            f'list tas')
+        return HttpResponse(template.render(context, req))
