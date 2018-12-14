@@ -119,7 +119,7 @@ class DeleteCourse(View):
 
     def get(self, req):
         template = loader.get_template('main/form.html')
-        context = {'page_title': 'Delete Course'}
+        context = {'page_title': 'Delete Course', 'form': CourseNameForm()}
         context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
         return HttpResponse(template.render(context, req))
 
