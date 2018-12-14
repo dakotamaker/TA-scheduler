@@ -28,6 +28,16 @@ As a supervisor or an administrator you can create a course for users to be assi
 
 Once a course is created you can assign TAs and instructors to it.
 
+## Delete a course
+- ***Role(s) needed:** Supervisor or Administrator*
+
+As a supervisor or administrator you can delete a course using:
+
+`delete course <course name>`
+
+The course will no longer exist.
+
+
 ## Create a lab
 - ***Role(s) needed:** Supervisor or Administrator*
 
@@ -42,7 +52,8 @@ Once a course is created you can assign TAs to it.
 
 As a supervisor you will be able to assign instructors or TAs to courses using:
 
-`assign course "<course name>" <email>`
+`assign course ta "<course name>" <email>`
+`assign course instructor "<course name>" <email>`
 
 And as a supervisor or instructor you will be able to assign TAs to labs using:
 
