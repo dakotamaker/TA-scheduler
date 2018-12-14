@@ -341,7 +341,43 @@ class Edit(View):
 
     def post(self, req):
         ##update only fields that have entries
-        pass
+        form = EditForm(req.POST)
+        context = {'page_title': 'Edit Information'}
+        context['out'] = ""
+        if form.is_valid():
+            ch = CommandHandler(req.session['current_user'])
+            edits = 0
+            lastcommand = ""
+
+            if (form.cleaned_data["phone"] != ''):
+                lastcommand = ch.ProcessCommand(f'edit act_phone:"{form.cleaned_data["phone"]}"')
+                if lastcommand == 'Edit successful':
+                    edits += 1
+            if (form.cleaned_data["address"] != ''):
+                lastcommand = ch.ProcessCommand(f'edit act_address:"{form.cleaned_data["address"]}"')
+                if lastcommand == 'Edit successful':
+                    edits += 1
+            if (form.cleaned_data["office_hours"] != ''):
+                lastcommand = ch.ProcessCommand(f'edit act_officehours:"{form.cleaned_data["office_hours"]}"')
+                if lastcommand == 'Edit successful':
+                    edits += 1
+            if (form.cleaned_data["office_location"] != ''):
+                lastcommand = ch.ProcessCommand(f'edit act_officelocation:"{form.cleaned_data["office_location"]}"')
+                if lastcommand == 'Edit successful':
+                    edits += 1
+
+            if edits > 0:
+                context['out'] = f'{edits} Attribute edits were successful'
+            else:
+                context['out'] = lastcommand
+
+            context['form'] = EditForm()
+        else:
+            context['form'] = form
+
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        template = loader.get_template('main/form.html')
+        return HttpResponse(template.render(context, req))
 
 class EditUser(View):
     def get(self, req):
@@ -352,7 +388,59 @@ class EditUser(View):
 
     def post(self, req):
         ##update only fields that have entries
-        pass
+        form = EditUserForm(req.POST)
+        context = {'page_title': 'Edit User Information'}
+        context['out'] = ""
+        if form.is_valid():
+            ch = CommandHandler(req.session['current_user'])
+            edits = 0
+            lastcommand = ""
+            if(form.cleaned_data["fname"] != ''):
+                lastcommand = ch.ProcessCommand(
+                    f'edit user "{form.cleaned_data["for_email"]}" act_fname:"{form.cleaned_data["fname"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+            if (form.cleaned_data["password"] != ''):
+                lastcommand = ch.ProcessCommand(
+                    f'edit user "{form.cleaned_data["for_email"]}" act_password:"{form.cleaned_data["password"]}"')
+                if lastcommand == 'Edit successful':
+                    edits += 1
+            if (form.cleaned_data["lname"] != ''):
+                lastcommand = ch.ProcessCommand(f'edit user "{form.cleaned_data["for_email"]}" act_lname:"{form.cleaned_data["lname"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+            if (form.cleaned_data["role_id"] != None and int(form.cleaned_data["role_id"]) >0 and int(form.cleaned_data["role_id"]) <= 4):
+                lastcommand = ch.ProcessCommand(f'edit user "{form.cleaned_data["for_email"]}" role_id:"{form.cleaned_data["role_id"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+            if (form.cleaned_data["phone"] != ''):
+                lastcommand =ch.ProcessCommand(f'edit user "{form.cleaned_data["for_email"]}" act_phone:"{form.cleaned_data["phone"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+            if (form.cleaned_data["address"] != ''):
+                lastcommand =ch.ProcessCommand(f'edit user "{form.cleaned_data["for_email"]}" act_address:"{form.cleaned_data["address"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+            if (form.cleaned_data["office_hours"] != ''):
+                lastcommand =ch.ProcessCommand(f'edit user "{form.cleaned_data["for_email"]}" act_officehours:"{form.cleaned_data["office_hours"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+            if (form.cleaned_data["office_location"] != ''):
+                lastcommand =ch.ProcessCommand(f'edit user "{form.cleaned_data["for_email"]}" act_officelocation:"{form.cleaned_data["office_location"]}"')
+                if lastcommand == 'Edit successful':
+                    edits+=1
+
+            if edits > 0:
+                context['out'] = f'{edits} Attribute edits were successful'
+            else:
+                context['out'] = lastcommand
+            context['form'] = EditUserForm()
+        else:
+            context['form'] = form
+
+        context['cmds'] = avcmd.getAvailableCommands(req.session['current_role'])
+        template = loader.get_template('main/form.html')
+        return HttpResponse(template.render(context, req))
 
 class ListTAs(View):
     def get(self, req):
