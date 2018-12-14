@@ -133,7 +133,7 @@ class CommandHandler:
         elif self.currentUser.RoleIn(Role.Instructor):
             c = Course.objects.filter(instructor=self.currentUser).all()
             i = 0
-            found: bool = False
+            found = False
             while found is False and i < len(c):
                 tas = c[i].tas.all()
                 j = 0
