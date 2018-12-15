@@ -58,8 +58,8 @@
             <div class='navigation'>
                 <ul class='nav nav-stacked'>
                     {% for cmd in cmds %}
-                        <li class=''>
-                            <a href='/{{ cmd.cmd_url }}'>
+                        <li class='{% if request.path == cmd.cmd_url %}active{% endif %}'>
+                            <a href='{{ cmd.cmd_url }}'>
                                 <i class='icon-plus' style='color:#60ADE9'></i><span>{{ cmd.cmd_txt }}</span>
                             </a>
                         </li>
