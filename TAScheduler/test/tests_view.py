@@ -80,9 +80,14 @@ class CourseAsSupervisor(TestCase):
         self.ta2 = Account.objects.create(act_email='ta2@email.com', role_id=1)
         self.instructor = Account.objects.create(act_email='instructor@email.com', role_id=2)
         self.course = Course.objects.create(course_name='course1', instructor=self.instructor)
+        self.course_no_instructor = Course.objects.create(course_name='badCourse', instructor=None)
         self.ch.currentUser = self.super
         self.ch.ProcessCommand('assign course ta "course1" ta1@email.com')
         self.ch.ProcessCommand('assign course ta "course1" ta2@email.com')
+
+    def test_viewing_course_with_no_instructor_and_info_is_returned(self):
+        msg = self.ch.ProcessCommand('view course badCourse')
+        self.assertEqual(msg, 'Course name: badCourse\nInstructor: \n')
 
     def test_viewing_course_and_course_info_is_returned(self):
         msg = self.ch.ProcessCommand('view course course1')
