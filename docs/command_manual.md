@@ -20,29 +20,40 @@ If you are logged in and wish to logout you can simply type:
 And you will no longer be the active user.
 
 ## Create a course
-- ***Role(s) needed:** Supervisor or admin* 
+- ***Role(s) needed:** Supervisor or Administrator*
 
-As a supervisor or an admin you can create a course for users toe be assigned to using: 
+As a supervisor or an administrator you can create a course for users to be assigned to using:
 
 `create course "<course name>"`
 
 Once a course is created you can assign TAs and instructors to it.
 
-## Create a lab
-- ***Role(s) needed:** Supervisor or admin* 
+## Delete a course
+- ***Role(s) needed:** Supervisor or Administrator*
 
-As a supervisor or an admin you can create a lab for users toe be assigned to using: 
+As a supervisor or administrator you can delete a course using:
+
+`delete course <course name>`
+
+The course will no longer exist.
+
+
+## Create a lab
+- ***Role(s) needed:** Supervisor or Administrator*
+
+As a supervisor or an administrator you can create a lab for users toe be assigned to using:
 
 `create lab "<course name>" "<lab name>"`
 
 Once a course is created you can assign TAs to it.
 
 ## Assign instructors/TAs to courses/labs
-- ***Role(s) needed:** Supervisor or instructor* 
+- ***Role(s) needed:** Supervisor or Instructor*
 
 As a supervisor you will be able to assign instructors or TAs to courses using:
 
-`assign course "<course name>" <email>`
+`assign course ta "<course name>" <email>`
+`assign course instructor "<course name>" <email>`
 
 And as a supervisor or instructor you will be able to assign TAs to labs using:
 
@@ -52,9 +63,9 @@ As an instructor you will only be able to enter emails of your TAs, and the lab 
 has to exist before assignment.
 
 ## Create a user
-- ***Role(s) needed:** Supervisor or admin* 
+- ***Role(s) needed:** Supervisor or Administrator*
 
-As a supervisor or admin you can create a user using: _(For another admin or supervisor)_
+As a supervisor or administrator you can create a user using: _(For another administrator or supervisor)_
 
 `create user <email> <first name> <last name> <role> <phone number without special characters> "<address>"`
 
@@ -65,9 +76,9 @@ or: _(For a TA or instructor)_
 Once the user is created then the user will be able to log in.
 
 ## Delete a user
-- ***Role(s) needed:** Supervisor or admin* 
+- ***Role(s) needed:** Supervisor or Administrator*
 
-As a supervisor or admin you can delete a user using:
+As a supervisor or administrator you can delete a user using:
 
 `delete user <email>`
 
@@ -80,14 +91,14 @@ As a user you will be able to edit your account information using:
 
 `edit <attribute>:"<new value>"`
 
-But as a supervisor or admin you will be able to edit any user's account using:
+But as a supervisor or administrator you will be able to edit any user's account using:
 
 `edit user <email> <attribute>:"<new value>"`
 
 ## Notify a user
-- ***Role(s) needed:** Supervisor, admin, or instructor* 
+- ***Role(s) needed:** Supervisor, Administrator, or Instructor*
 
-As a supervisor or admin you will be able to send out an email to any user in the 
+As a supervisor or administrator you will be able to send out an email to any user in the
 system, but as an instructor you will only be able to email your TAs using:
 
 `notify <email address> "<subject>" "<body>"`
@@ -101,34 +112,34 @@ will depend on the role you have
 #### Viewing individual things:
 - *Viewing specific user data:* `view user <email>`
     - This will show different data based on the role.
-    - As an instructor or TA you will be able to see that user's public information
-    - As a supervisor or admin you will see all of that user's information
+    - As an Instructor or TA you will be able to see that user's public information
+    - As a Supervisor or Administrator you will see all of that user's information
  
 - *Viewing course assignments:* `view course "<course name>"`
-    - As a supervisor or admin you will be able to see any course with that course name
-    - As an instructor you will only see that course information if you're assigned to it
+    - As a Supervisor or Administrator you will be able to see any course with that course name
+    - As an Instructor you will only see that course information if you're assigned to it
     - TAs will not be able to run this command
     
 - *Viewing course assignments:* `view lab "<lab id>"`
-    - As a supervisor or admin you will be able to see any course with that course name
-    - As an instructor you will only see that lab information if you're assigned to it's course
+    - As a Supervisor or Administrator you will be able to see any course with that course name
+    - As an Instructor you will only see that lab information if you're assigned to it's course
     - TAs will not be able to run this command
 
 #### Viewing lists of things:
 - *Viewing specific user data:* `list users`
     - This will show different data based on the role.
-    - As an instructor or TA you will be able to see users' public information
-    - As a supervisor or admin you will see all information
+    - As an Instructor or TA you will be able to see users' public information
+    - As a Supervisor or Administrator you will see all information
  
 - *Viewing specific user data:* `list tas`
     - This will do the same thing as the `view users` command, but will only show TAs
  
 - *Viewing course assignments:* `list courses`
-    - As a supervisor or admin you will be able to see all course
-    - As an instructor you will only see courses that you're assigned to
+    - As a Supervisor or Administrator you will be able to see all course
+    - As an Instructor you will only see courses that you're assigned to
     - TAs will not be able to run this command
     
 - *Viewing course assignments:* `list labs`
-    - As a supervisor or admin you will be able to see all labs
-    - As an instructor you will only see the labs that are assigned to the course it's associated with
+    - As a Supervisor or Administrator you will be able to see all labs
+    - As an Instructor you will only see the labs that are assigned to the course it's associated with
     - TAs will not be able to run this command
